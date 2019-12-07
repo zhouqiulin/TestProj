@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Volo.Abp;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.Users;
 
 namespace CMS.EntityFrameworkCore
@@ -19,6 +20,13 @@ namespace CMS.EntityFrameworkCore
 
             //    //...
             //});
+            builder.Entity<Article>(b =>
+            {
+                b.ToTable(CMSConsts.DbTablePrefix + "Articles", CMSConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Title).IsRequired().HasMaxLength(128);
+
+            });
         }
 
         public static void ConfigureCustomUserProperties<TUser>(this EntityTypeBuilder<TUser> b)

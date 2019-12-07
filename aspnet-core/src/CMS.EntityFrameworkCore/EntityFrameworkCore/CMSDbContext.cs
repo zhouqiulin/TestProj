@@ -25,6 +25,7 @@ namespace CMS.EntityFrameworkCore
          * Also map them inside CMSDbContextModelCreatingExtensions.ConfigureCMS
          */
 
+        public DbSet<Article> Articles { get; set; }
         public CMSDbContext(DbContextOptions<CMSDbContext> options)
             : base(options)
         {
