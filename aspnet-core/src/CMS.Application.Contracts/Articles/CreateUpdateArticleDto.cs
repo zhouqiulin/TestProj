@@ -12,7 +12,14 @@ namespace CMS
         public string Title { get; set; }
 
         [Required]
-        public ArticleType Type { get; set; } = ArticleType.Undefined;
+        public Guid Type { get; set; }
+
+        [StringLength(64)]
+        public string From { get; set; }
+
+
+        [StringLength(128)]
+        public string CoverUrl { get; set; }
 
         [Required]
         [StringLength(128)]
@@ -20,5 +27,10 @@ namespace CMS
 
         [Required]
         public string Content { get; set; }
+    }
+
+    public class CreateUpdateArticleDto<Tkey> : CreateUpdateArticleDto
+    {
+        public Guid Id { get; set; }
     }
 }

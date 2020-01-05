@@ -3,6 +3,7 @@ using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 using System;
+using CMS.Articles;
 
 namespace CMS
 {

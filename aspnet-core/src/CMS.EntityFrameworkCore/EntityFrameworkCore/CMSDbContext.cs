@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using CMS.Users;
+using CMS.Articles;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.Modeling;

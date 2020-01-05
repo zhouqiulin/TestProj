@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Volo.Abp;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.Users;
+using CMS.Articles;
 
 namespace CMS.EntityFrameworkCore
 {
