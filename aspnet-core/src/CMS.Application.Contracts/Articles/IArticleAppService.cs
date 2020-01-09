@@ -8,7 +8,7 @@ using CMS.Articles;
 
 namespace CMS
 {
-    public interface IArticleAppService : ICrudAppService<ArticleDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateArticleDto, CreateUpdateArticleDto>
+    public interface IArticleAppService : ICrudAppService<ArticleDto, Guid, GetArticleListInputDto, CreateUpdateArticleDto, CreateUpdateArticleDto>
     {
         public Task<IList<ArticleDto>> UpdateRange(IList<CreateUpdateArticleDto<Guid>> createUpdateArticleDtos);
     }

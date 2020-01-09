@@ -6,17 +6,18 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
 using CMS.Articles;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace CMS
 {
-    public class ArticleAppService: CrudAppService<Article,ArticleDto,Guid,PagedAndSortedResultRequestDto, CreateUpdateArticleDto, CreateUpdateArticleDto>, IArticleAppService
+    public class ArticleAppService: CrudAppService<Article,ArticleDto,Guid, GetArticleListInputDto, CreateUpdateArticleDto, CreateUpdateArticleDto>, IArticleAppService
     {
         private readonly IRepository<Article, Guid> _repository;
-        private readonly IArticleRepository _crepository;
-        public ArticleAppService(IRepository<Article, Guid> repository,IArticleRepository crepository) : base(repository)
+        private readonly IArticleRepository _articleRepository;
+        public ArticleAppService(IRepository<Article, Guid> repository,IArticleRepository articleRepository) : base(repository)
         {
             _repository = repository;
-            _crepository = crepository;
+            _articleRepository = articleRepository;
         }
 
         public async Task<IList<ArticleDto>> UpdateRange(IList<CreateUpdateArticleDto<Guid>> updateDtos)
@@ -27,14 +28,20 @@ namespace CMS
             foreach (var item in updateDtos)
             {
                 var entity = await GetEntityByIdAsync(item.Id);
-                MapToEntity(item,entity);
+                base.MapToEntity(item,entity);
                 entities.Add(entity);
             }
-            await _crepository.UpdateRange(entities);
+            await _articleRepository.UpdateRange(entities);
             return ObjectMapper.Map<IList<Article>, IList<ArticleDto>>(entities);
 
 
         }
+        protected override IQueryable<Article> CreateFilteredQuery(GetArticleListInputDto input)
+        {
+            return _repository.Where(o => o.Title.Contains(input.Title) || input.Title.IsNullOrWhiteSpace());
+
+        }
+     
     }
 }
 
