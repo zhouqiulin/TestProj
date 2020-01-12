@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using Volo.Abp.Domain.Entities.Auditing;
-using CMS.Type;
 
 namespace CMS.Pages
 {
-    public class Pages : AuditedAggregateRoot<Guid>
+    public class Page : AuditedAggregateRoot<Guid>
     {
         public string Name { get; set; }
 

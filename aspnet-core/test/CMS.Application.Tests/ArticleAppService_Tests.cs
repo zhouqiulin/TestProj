@@ -7,6 +7,7 @@ using Xunit;
 using System.Threading.Tasks;
 using Volo.Abp.Validation;
 using System.Linq;
+using CMS.Articles;
 
 namespace CMS
 {
@@ -21,7 +22,7 @@ namespace CMS
         [Fact]
         public async Task Should_Get_List_Of_Articles()
         {
-            var result = await _articleAppService.GetListAsync(new PagedAndSortedResultRequestDto());
+            var result = await _articleAppService.GetListAsync(new GetArticleListInputDto());
             result.TotalCount.ShouldBeGreaterThan(0);
             result.Items.ShouldContain(b => b.Title == "贺氏吊装");
 

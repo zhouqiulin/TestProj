@@ -1,6 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using CMS.Users;
 using CMS.Articles;
+using CMS.Products;
+using CMS.Menus;
+using CMS.Trees;
+using CMS.Pages;
+
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.Modeling;
@@ -27,6 +32,15 @@ namespace CMS.EntityFrameworkCore
          */
 
         public DbSet<Article> Articles { get; set; }
+
+        public DbSet<Product> Products { get; set; }
+
+        public DbSet<Menu> Menus { get; set; }
+
+        public DbSet<Tree> Trees { get; set; }
+
+        public DbSet<Page> Pages { get; set; }
+
         public CMSDbContext(DbContextOptions<CMSDbContext> options)
             : base(options)
         {

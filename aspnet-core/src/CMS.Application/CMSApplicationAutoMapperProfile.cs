@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Articles;
+using CMS.Products;
 
 namespace CMS
 {
@@ -12,6 +13,9 @@ namespace CMS
              * into multiple profile classes for a better organization. */
             CreateMap<Article, ArticleDto>();
             CreateMap<CreateUpdateArticleDto, Article>();
+
+            CreateMap<Product, ProductDto>();
+            CreateMap<CreateUpdateProductDto, Product>();
         }
     }
 }
