@@ -6,6 +6,7 @@ using Volo.Abp.Users;
 using CMS.Articles;
 using CMS.Products;
 using CMS.Menus;
+using CMS.Pages;
 
 namespace CMS.EntityFrameworkCore
 {
@@ -42,6 +43,14 @@ namespace CMS.EntityFrameworkCore
             builder.Entity<Menu>(b =>
             {
                 b.ToTable(CMSConsts.DbTablePrefix + "Menus", CMSConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Name).IsRequired().HasMaxLength(16);
+
+            });
+
+            builder.Entity<Page>(b =>
+            {
+                b.ToTable(CMSConsts.DbTablePrefix + "Pages", CMSConsts.DbSchema);
                 b.ConfigureByConvention();
                 b.Property(x => x.Name).IsRequired().HasMaxLength(16);
 
