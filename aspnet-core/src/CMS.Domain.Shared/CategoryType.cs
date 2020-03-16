@@ -6,8 +6,9 @@ namespace CMS
 {
     public enum Category
     {
-        Article,
-        Product
+        Article = 1,
+        Product,
+        Page
 
     }
 }

@@ -3,6 +3,7 @@ using CMS.Articles;
 using CMS.Products;
 using CMS.Menus;
 using CMS.Pages;
+using CMS.Trees;
 
 namespace CMS
 {
@@ -24,6 +25,9 @@ namespace CMS
 
             CreateMap<Page, PageDto>();
             CreateMap<CreateUpdatePageDto, Page>();
+
+            CreateMap<Tree, TreeDto>();
+            CreateMap<CreateUpdateTreeDto, Tree>();
 
         }
     }

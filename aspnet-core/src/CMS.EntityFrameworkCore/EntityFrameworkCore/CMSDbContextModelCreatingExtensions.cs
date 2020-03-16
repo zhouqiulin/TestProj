@@ -7,6 +7,7 @@ using CMS.Articles;
 using CMS.Products;
 using CMS.Menus;
 using CMS.Pages;
+using CMS.Trees;
 
 namespace CMS.EntityFrameworkCore
 {
@@ -51,6 +52,14 @@ namespace CMS.EntityFrameworkCore
             builder.Entity<Page>(b =>
             {
                 b.ToTable(CMSConsts.DbTablePrefix + "Pages", CMSConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Name).IsRequired().HasMaxLength(16);
+
+            });
+
+            builder.Entity<Tree>(b =>
+            {
+                b.ToTable(CMSConsts.DbTablePrefix + "Trees", CMSConsts.DbSchema);
                 b.ConfigureByConvention();
                 b.Property(x => x.Name).IsRequired().HasMaxLength(16);
 
