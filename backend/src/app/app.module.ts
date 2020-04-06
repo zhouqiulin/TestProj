@@ -39,4 +39,9 @@ export function createTranslateLoader(http: HttpClient) {
     providers: [],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+     constructor(){
+         //检查是否有token
+         debugger
+     }
+ }
