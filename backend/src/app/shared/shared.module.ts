@@ -23,6 +23,9 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { DatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
+import { NgZorroAntdModule, NZ_I18N, zh_CN } from 'ng-zorro-antd';
+
+
 import { FlotDirective } from './directives/flot/flot.directive';
 import { SparklineDirective } from './directives/sparkline/sparkline.directive';
 import { EasypiechartDirective } from './directives/easypiechart/easypiechart.directive';
@@ -57,7 +60,8 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
         TooltipModule.forRoot(),
         PopoverModule.forRoot(),
         TypeaheadModule.forRoot(),
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        NgZorroAntdModule
     ],
     providers: [
         ColorsService
@@ -103,7 +107,8 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
         VectormapDirective,
         NowDirective,
         ScrollableDirective,
-        JqcloudDirective
+        JqcloudDirective,
+        NgZorroAntdModule
     ]
 })
 
@@ -111,7 +116,13 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
 export class SharedModule {
     static forRoot(): ModuleWithProviders {
         return {
-            ngModule: SharedModule
+            ngModule: SharedModule,
+            providers:[
+                {
+                    provide:NZ_I18N,
+                    useValue:zh_CN
+                }
+            ]
         };
     }
 }

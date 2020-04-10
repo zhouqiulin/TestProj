@@ -12,16 +12,16 @@ const headingMain = {
 
 const articleManage={
     text:'资讯管理',
-    link:'/article',
+    link:'/articles',
     icon:'icon-note',
     submenu: [
         {
             text: '资讯列表',
-            link: '/article/list'
+            link: '/articles/list'
         },
         {
-            text: '资讯类别',
-            link: '/article/type'
+            text: '新增资讯',
+            link: '/articles/details'
         },
 
     ]
@@ -36,8 +36,8 @@ const productManage={
             link:'/product/list'
         },
         {
-            text:'产品类别',
-            link:'/product/type'
+            text:'新增产品',
+            link:'/product/details'
         }
     ]
 }
@@ -52,22 +52,12 @@ const pageManage={
             link:'/page/list'
         },
         {
-            text:'单页类别',
-            link:'/page/type'
+            text:'新增单页',
+            link:'/page/details'
         }
     ]
 }
-const menuManage={
-    text:'菜单管理',
-    link:'/menu',
-    icon:'icon-menu',
-    submenu:[
-        {
-            text:'菜单列表',
-            link:'/product/list'
-        }
-    ]
-}
+
 
 const systemManage={
     text:'系统管理',
@@ -81,6 +71,5 @@ export const menu = [
     articleManage,
     productManage,
     pageManage,
-    menuManage,
     systemManage
 ];
