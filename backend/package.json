@@ -25,6 +25,8 @@
     "@angular/platform-browser": "9.0.0",
     "@angular/platform-browser-dynamic": "9.0.0",
     "@angular/router": "9.0.0",
+    "@ckeditor/ckeditor5-angular": "^1.2.3",
+    "@ckeditor/ckeditor5-build-classic": "^18.0.0",
     "@fortawesome/fontawesome-free": "5.5.0",
     "@fullcalendar/angular": "4.4.5-beta",
     "@fullcalendar/bootstrap": "4.4.0",

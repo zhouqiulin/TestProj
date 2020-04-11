@@ -4,10 +4,10 @@ import { ArticlesService } from '../../../services/articles.service'
 
 @Component({
   selector: 'app-articles-list',
-  templateUrl: './articles.list.component.html',
-  styleUrls: ['./articles.list.component.scss']
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.scss']
 })
-export class ArticlesListComponent implements OnInit {
+export class ListComponent implements OnInit {
 
   constructor(private http: HttpClient, private articlesSerive: ArticlesService) { }
 
