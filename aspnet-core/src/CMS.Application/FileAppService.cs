@@ -17,7 +17,7 @@ namespace CMS
             _settingProvider = settingProvider;
         }
 
-        public async Task<string> UploadFile(IFormFile file)
+        public async Task<object> UploadFile(IFormFile file)
         {
             if (await ValidateFile(file))
             {
@@ -29,9 +29,13 @@ namespace CMS
                 {
                     await file.CopyToAsync(stream);
                 }
-                return url.Item2 + "/" + fileName;
+                return new { path = url.Item2 + "/" + fileName };
             }
-            return "";
+            else
+            {
+                throw new UserFriendlyException("上传失败");
+            }
+
         }
 
         private async Task<Tuple<string, string>> GetPath()
@@ -59,7 +63,7 @@ namespace CMS
             var maxLength = await _settingProvider.GetAsync<long>("App.UploadFiles.MaxLength");
 
             //为空检查
-            if (file==null||file.Length == 0)
+            if (file == null || file.Length == 0)
             {
                 throw new UserFriendlyException("文件不能为空");
             }
