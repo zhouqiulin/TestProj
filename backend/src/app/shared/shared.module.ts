@@ -35,6 +35,7 @@ import { VectormapDirective } from './directives/vectormap/vectormap.directive';
 import { NowDirective } from './directives/now/now.directive';
 import { ScrollableDirective } from './directives/scrollable/scrollable.directive';
 import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
+import { TINYMCE_SCRIPT_SRC, EditorModule } from '@tinymce/tinymce-angular';
 
 // https://angular.io/styleguide#!#04-10
 @NgModule({
@@ -61,7 +62,8 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
         PopoverModule.forRoot(),
         TypeaheadModule.forRoot(),
         ToastrModule.forRoot(),
-        NgZorroAntdModule
+        NgZorroAntdModule,
+        EditorModule
     ],
     providers: [
         ColorsService
@@ -108,7 +110,8 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
         NowDirective,
         ScrollableDirective,
         JqcloudDirective,
-        NgZorroAntdModule
+        NgZorroAntdModule,
+        EditorModule,
     ]
 })
 
@@ -117,10 +120,13 @@ export class SharedModule {
     static forRoot(): ModuleWithProviders {
         return {
             ngModule: SharedModule,
-            providers:[
+            providers: [
                 {
-                    provide:NZ_I18N,
-                    useValue:zh_CN
+                    provide: NZ_I18N,
+                    useValue: zh_CN
+                },
+                { provide: TINYMCE_SCRIPT_SRC,
+                  useValue: '/assets/tinymce/tinymce.min.js'
                 }
             ]
         };
