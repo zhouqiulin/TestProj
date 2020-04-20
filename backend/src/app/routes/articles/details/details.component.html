@@ -8,20 +8,20 @@
    <form class="main" nz-form [formGroup]="articleForm" (ngSubmit)="submitForm($event, articleForm.value)" nzLayout="horizontal">
         <nz-form-item >
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="title">标题</nz-form-label>
-            <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="The input is not valid E-mail!">
+            <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="请输入标题">
                 <input nz-input formControlName="title" id="title" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item >
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="description">描述</nz-form-label>
-            <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="The input is not valid E-mail!">
+            <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="请输入描述">
                 <textarea nz-input placeholder="" formControlName="description"
                     [nzAutosize]="{ minRows: 2, maxRows: 6 }"></textarea>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item >
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="treeId">分类</nz-form-label>
-            <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="The input is not valid E-mail!">
+            <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="请选择分类">
                 <nz-cascader [nzOptions]="treeOptons" formControlName="treeId"></nz-cascader>
             </nz-form-control>
         </nz-form-item>

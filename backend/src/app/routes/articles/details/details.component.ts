@@ -62,7 +62,7 @@ export class DetailsComponent implements OnInit {
   showMore=false;
   uploadFile:UploadFile;
   editorConfig=this.settings.getEditorSetting();
-  constructor(private settings: SettingsService, private http: HttpClient, private fb: FormBuilder, private msg: NzMessageService) {
+  constructor(private settings: SettingsService, private http: HttpClient, private fb: FormBuilder, private articlesSerive: ArticlesService, private msg: NzMessageService) {
   
   }
 
@@ -141,8 +141,16 @@ export class DetailsComponent implements OnInit {
     }
   }
 
-  submitForm(a,b){
-    debugger
+  submitForm(){
+    for (const i in this.articleForm.controls) {
+      this.articleForm.controls[i].markAsDirty();
+      this.articleForm.controls[i].updateValueAndValidity();
+    }
+    if (this.articleForm.status=="VALID") {
+       this.articlesSerive.addArticle(this.articleForm.value).subscribe(res=>{
+         this.msg.success("添加成功");
+       })
+    }
   }
 
   ngOnInit(): void {
