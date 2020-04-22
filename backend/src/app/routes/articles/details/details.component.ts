@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ArticlesService } from '../../../services/articles.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UploadFile, NzMessageService } from 'ng-zorro-antd';
@@ -54,23 +54,33 @@ const options = [
   styleUrls: ['./details.component.scss']
 })
 export class DetailsComponent implements OnInit {
+  pageTitle: string;
+  id: string;
   articleForm: FormGroup;
-  treeOptons=options;
+  treeOptons = options;
   loading = false;
-  avatarUrl: string;
-  uploadFileUrl="/api/app/file/uploadFile"
-  showMore=false;
-  uploadFile:UploadFile;
-  editorConfig=this.settings.getEditorSetting();
-  constructor(private settings: SettingsService, private http: HttpClient, private fb: FormBuilder, private articlesSerive: ArticlesService, private msg: NzMessageService) {
-  
+  coverUrl: string;
+  uploadFileUrl = '/api/app/file/uploadFile';
+  showMore = false;
+  uploadFile: UploadFile;
+  editorConfig = this.settings.getEditorSetting();
+  dataLoading = false;
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private settings: SettingsService,
+    private fb: FormBuilder,
+    private articlesSerive: ArticlesService,
+    private msg: NzMessageService
+  ) {
+
   }
 
-  toggleMore(){
-    this.showMore=!this.showMore;
+  toggleMore() {
+    this.showMore = !this.showMore;
     return false;
   }
-  
+
 
 
 
@@ -100,7 +110,7 @@ export class DetailsComponent implements OnInit {
         observer.complete();
       });
     });
-  };
+  }
 
   private getBase64(img: File, callback: (img: string) => void): void {
     const reader = new FileReader();
@@ -130,9 +140,11 @@ export class DetailsComponent implements OnInit {
         // Get this url from response in real world.
         this.getBase64(info.file!.originFileObj!, (img: string) => {
           this.loading = false;
-          this.avatarUrl = img;
+          this.coverUrl = img;
         });
-        this.articleForm.value.coverUrl=info.file.response.path;
+        this.articleForm.patchValue({
+          coverUrl: info.file.response.path
+        });
         break;
       case 'error':
         this.msg.error('Network error');
@@ -141,15 +153,23 @@ export class DetailsComponent implements OnInit {
     }
   }
 
-  submitForm(){
+  submitForm() {
     for (const i in this.articleForm.controls) {
       this.articleForm.controls[i].markAsDirty();
       this.articleForm.controls[i].updateValueAndValidity();
     }
-    if (this.articleForm.status=="VALID") {
-       this.articlesSerive.addArticle(this.articleForm.value).subscribe(res=>{
-         this.msg.success("添加成功");
-       })
+    if (this.articleForm.status === 'VALID') {
+      if (this.id) {
+        this.articlesSerive.putArticle(this.id, this.articleForm.value).subscribe(res => {
+          this.msg.success('修改成功');
+        });
+
+      } else {
+        this.articlesSerive.addArticle(this.articleForm.value).subscribe(res => {
+          this.msg.success('添加成功');
+          this.router.navigate(['/articles/list']);
+        });
+      }
     }
   }
 
@@ -163,6 +183,31 @@ export class DetailsComponent implements OnInit {
       from: [null],
       content: [null],
     });
+
+    this.activatedRoute.queryParams.subscribe(queyParams => {
+      this.id = queyParams.id;
+      if (this.id) {
+        this.pageTitle = '编辑资讯';
+        this.dataLoading = true;
+        this.articlesSerive.getArticle(queyParams.id).subscribe(res => {
+          this.dataLoading = false;
+          this.articleForm.setValue({
+            title: res.title,
+            description: res.description,
+            treeId: '22',
+            coverUrl: res.coverUrl,
+            keywords: '22',
+            from: res.from,
+            content: res.content
+          });
+          debugger;
+          this.coverUrl = res.coverUrl;
+        });
+      } else {
+        this.pageTitle = '新增资讯';
+      }
+    });
+
   }
 
 }

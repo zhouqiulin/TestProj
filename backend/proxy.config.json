@@ -1,7 +1,12 @@
 {
-    "/api": {
-      "target": "http://cmsapi.zql.me/",
-      "secure": false,
-      "changeOrigin": true
-    }
+  "/api": {
+    "target": "http://cmsapi.zql.me/",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/UploadFiles": {
+    "target": "http://cmsapi.zql.me/",
+    "secure": false,
+    "changeOrigin": true
+  }
 }

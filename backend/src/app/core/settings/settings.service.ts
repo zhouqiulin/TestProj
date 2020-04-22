@@ -49,7 +49,7 @@ export class SettingsService {
 
         this.editor = {
             language: 'zh_CN',
-            images_upload_handler:  (blobInfo, succFun, failFun) =>{
+            images_upload_handler: (blobInfo, succFun, failFun) => {
                 // var xhr, formData;
                 // var file = blobInfo.blob();//转化为易于理解的file对象
                 // xhr = new XMLHttpRequest();
@@ -77,16 +77,16 @@ export class SettingsService {
                 // Create a FormData here to store files and other parameters.
                 const formData = new FormData();
                 // tslint:disable-next-line:no-any
-                formData.append('file',  blobInfo.blob() as any);
-                const req = new HttpRequest('POST','/api/app/file/uploadfile', formData, {
+                formData.append('file', blobInfo.blob() as any);
+                const req = new HttpRequest('POST', '/api/app/file/uploadfile', formData, {
                     withCredentials: true
                 });
                 // Always returns a `Subscription` object. nz-upload would automatically unsubscribe it at correct time.
                 this.http.request(req).subscribe(
                     // tslint:disable-next-line no-any
                     (event: HttpEvent<any>) => {
-                        if(event.type==HttpEventType.Response){
-                            succFun('http://cmsapi.zql.me'+ event.body.path)
+                        if (event.type === HttpEventType.Response) {
+                            succFun(event.body.path);
                         }
                     },
                     err => {
@@ -103,10 +103,10 @@ export class SettingsService {
             menubar: 'file edit view insert format tools table  help',
             toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist  | forecolor backcolor    removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media  template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment code',
             autosave_ask_before_unload: true,
-            autosave_interval: "30s",
-            autosave_prefix: "{path}{query}-{id}-",
+            autosave_interval: '30s',
+            autosave_prefix: '{path}{query}-{id}-',
             autosave_restore_when_empty: false,
-            autosave_retention: "2m",
+            autosave_retention: '2m',
             image_advtab: true,
             importcss_append: true,
             template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
@@ -114,12 +114,12 @@ export class SettingsService {
             height: 600,
             image_caption: true,
             quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-            noneditable_noneditable_class: "mceNonEditable",
+            noneditable_noneditable_class: 'mceNonEditable',
             toolbar_mode: 'sliding',
-            content_style: ".mymention{ color: gray; }",
-            contextmenu: "link image imagetools table configure",
+            content_style: '.mymention{ color: gray; }',
+            contextmenu: 'link image imagetools table configure',
             a11y_advanced_options: true,
-        }
+        };
 
     }
 
