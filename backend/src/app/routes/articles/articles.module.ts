@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { ArticlesService } from '../../services/articles.service';
 import { ListComponent } from './list/list.component';
-import { DetailsComponent } from './details/details.component'
+import { DetailsComponent } from './details/details.component';
 
 const routes: Routes = [
     { path: 'list', component: ListComponent },

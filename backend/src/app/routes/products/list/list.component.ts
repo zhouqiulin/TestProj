@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { ArticlesService } from '../../../services/articles.service';
+import { ProductsService } from '../../../services/products.service';
 import { NzModalService, NzMessageService } from 'ng-zorro-antd';
 
 @Component({
@@ -13,16 +13,16 @@ export class ListComponent implements OnInit {
 
   constructor(private http: HttpClient,
               private route: Router,
-              private articlesSerive: ArticlesService,
+              private productsService: ProductsService,
               private modal: NzModalService,
               private msg: NzMessageService
   ) { }
 
   treeId = '';
-  title = '';
+  name = '';
 
   searchTreeId: string;
-  searchTitle: string;
+  searchName: string;
 
 
   totalCount = 0;
@@ -58,7 +58,7 @@ export class ListComponent implements OnInit {
 
   getData() {
     this.loading = true;
-    this.articlesSerive.getArticleList(this.pageIndex, this.pageSize, this.title, '')
+    this.productsService.getProductList(this.pageIndex, this.pageSize, this.name, '')
       .subscribe(res => {
         this.list = res.items;
         this.totalCount = res.totalCount;
@@ -69,11 +69,11 @@ export class ListComponent implements OnInit {
   searchData() {
     this.pageIndex = 1;
     this.searchTreeId = this.treeId;
-    this.searchTitle = this.title;
+    this.searchName = this.name;
     this.getData();
   }
   edit(data) {
-    this.route.navigate(['/articles/details'], {
+    this.route.navigate(['/products/details'], {
       queryParams: {
         id: data.id
       }
@@ -85,7 +85,7 @@ export class ListComponent implements OnInit {
       nzTitle: '确定删除?',
       nzContent: '<b style="color: red;">删除后无法再恢复！</b>',
       nzOkType: 'danger',
-      nzOnOk: () => this.articlesSerive.deleteArticle(data.id).subscribe(res => {
+      nzOnOk: () => this.productsService.deleteProduct(data.id).subscribe(res => {
         this.msg.success('删除成功');
         this.getData();
       }),
@@ -93,7 +93,7 @@ export class ListComponent implements OnInit {
     });
 
 
-    this.articlesSerive.deleteArticle(data.id);
+    this.productsService.deleteProduct(data.id);
   }
 
 

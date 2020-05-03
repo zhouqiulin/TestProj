@@ -10,10 +10,10 @@ const headingMain = {
     heading: true
 };
 
-const articleManage={
-    text:'资讯管理',
-    link:'/articles',
-    icon:'icon-note',
+const articleManage = {
+    text: '资讯管理',
+    link: '/articles',
+    icon: 'icon-note',
     submenu: [
         {
             text: '资讯列表',
@@ -25,45 +25,45 @@ const articleManage={
         },
 
     ]
-}
-const productManage={
-    text:'产品管理',
-    link:'/article',
-    icon:'icon-handbag',
-    submenu:[
+};
+const productManage = {
+    text: '产品管理',
+    link: '/article',
+    icon: 'icon-handbag',
+    submenu: [
         {
-            text:'产品列表',
-            link:'/product/list'
+            text: '产品列表',
+            link: '/products/list'
         },
         {
-            text:'新增产品',
-            link:'/product/details'
+            text: '新增产品',
+            link: '/products/details'
         }
     ]
-}
+};
 
-const pageManage={
-    text:'单页管理',
-    link:'/page',
-    icon:'icon-docs',
-    submenu:[
+const pageManage = {
+    text: '单页管理',
+    link: '/page',
+    icon: 'icon-docs',
+    submenu: [
         {
-            text:'单页列表',
-            link:'/page/list'
+            text: '单页列表',
+            link: '/page/list'
         },
         {
-            text:'新增单页',
-            link:'/page/details'
+            text: '新增单页',
+            link: '/page/details'
         }
     ]
-}
+};
 
 
-const systemManage={
-    text:'系统管理',
-    link:'/tree',
-    icon:'icon-settings'
-}
+const systemManage = {
+    text: '系统管理',
+    link: '/tree',
+    icon: 'icon-settings'
+};
 
 export const menu = [
     headingMain,

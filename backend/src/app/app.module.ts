@@ -12,6 +12,8 @@ import { LayoutModule } from './layout/layout.module';
 import { SharedModule } from './shared/shared.module';
 import { RoutesModule } from './routes/routes.module';
 
+import { CommonService } from './services/common.service';
+
 // https://github.com/ocombe/ng2-translate/issues/218
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -36,10 +38,13 @@ export function createTranslateLoader(http: HttpClient) {
             }
         })
     ],
+    providers: [
+        CommonService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {
-     constructor(){
-         //检查是否有token
-     }
- }
+    constructor() {
+        // 检查是否有token
+    }
+}

@@ -158,3 +158,12 @@ export class SettingsService {
     }
 
 }
+
+
+export enum ImageForUse {
+    ArticleCover = 'ArticleCover',
+    ProductMainImage = 'ProductMainImage',
+    ProductOtherImage = 'ProductOtherImage'
+}
+
+
