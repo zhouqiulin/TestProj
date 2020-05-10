@@ -1,0 +1,19 @@
+.card-header{
+    padding-top: 15px;
+    padding-bottom: 0;
+
+    .options{
+        float: left;
+        button{
+            margin-right: 10px;
+        }
+    }
+    .search{
+        float: right;
+        nz-input-group{
+            width: 300px;
+            margin-left: 10px;
+        }
+    }
+}
+

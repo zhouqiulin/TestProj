@@ -1,0 +1,63 @@
+<div class="content-heading">
+    <div>{{pageTitle}}
+        <small></small>
+    </div>
+</div>
+
+<nz-spin class="card card-default" [nzSpinning]="dataLoading">
+    <form class="main" nz-form [formGroup]="pageForm" (ngSubmit)="submitForm($event, pageForm.value)"
+        nzLayout="horizontal">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">名称</nz-form-label>
+            <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="请输入页面名称">
+                <input nz-input formControlName="name" id="name" />
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="treeId">分类</nz-form-label>
+            <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="请选择分类">
+                <nz-cascader [nzOptions]="treeOptons" formControlName="treeId"></nz-cascader>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">SEO</nz-form-label>
+            <nz-form-control [nzSm]="8" [nzXs]="24">
+                <button nz-button nzType="link" (click)="toggleMore()">{{showMore?'收起':'展开'}}<i nz-icon
+                        [nzType]="showMore?'up':'down'"></i></button>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="showMore">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="title">标题</nz-form-label>
+            <nz-form-control [nzSm]="8" [nzXs]="24">
+                <input nz-input formControlName="title" id="title" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="showMore">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="description">描述</nz-form-label>
+            <nz-form-control [nzSm]="8" [nzXs]="24">
+                <textarea nz-input placeholder="" formControlName="description"
+                    [nzAutosize]="{ minRows: 2, maxRows: 6 }"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="showMore">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="keywords">关键字</nz-form-label>
+            <nz-form-control [nzSm]="8" [nzXs]="24">
+                <input nz-input formControlName="keywords" id="keywords" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">内容</nz-form-label>
+            <nz-col [nzSm]="14" [nzXs]="24">
+                <editor id="editor" [init]="editorConfig" formControlName="content"></editor>
+            </nz-col>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control [nzSm]="{span:14,offset:6}" [nzXs]="24">
+                <button nz-button nzType="primary">提交</button>
+            </nz-form-control>
+        </nz-form-item>
+
+
+    </form>
+</nz-spin>

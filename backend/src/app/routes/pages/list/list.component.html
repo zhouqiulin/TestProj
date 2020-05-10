@@ -1,0 +1,53 @@
+<div class="content-heading">
+    <div>单页列表
+        <small></small>
+    </div>
+</div>
+
+<div class="card card-default">
+    <div class="card-header clearfix">
+        <div class="options">
+            <button nz-button nzType="primary"><i nz-icon nzType="plus"></i>添加</button>
+        </div>
+        <div class="search">
+            <nz-tree-select style="width: 250px" [nzExpandedKeys]="expandKeys" [nzNodes]="nodes" nzShowSearch
+                nzPlaceHolder="选择类别" [(ngModel)]="treeId">
+            </nz-tree-select>
+            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                <input type="text" nz-input placeholder="标题" [(ngModel)]="title" />
+            </nz-input-group>
+            <ng-template #suffixIconButton>
+                <button nz-button nzType="primary" nzSearch (click)="searchData()"><i nz-icon
+                        nzType="search"></i></button>
+            </ng-template>
+
+        </div>
+
+    </div>
+    <div class="card-body">
+
+        <nz-table #table nzSize="middle" nzFrontPagination="false" nzShowSizeChanger="true" [nzLoading]="loading"
+            [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" [(nzTotal)]="totalCount" [nzData]="list"
+            (nzPageIndexChange)="getData()" (nzPageSizeChange)="getData()">
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of table.data">
+                    <td>{{ data.name }}</td>
+                    <td>{{ data.creationTime|date:'yyyy-MM-dd HH:mm:ss' }}</td>
+                    <td>
+                        <button class="mr10" nz-button nzSize="small" nzType="primary" (click)="edit(data)"><i nz-icon
+                                nzType="edit"></i>编辑</button>
+                        <button nz-button nzSize="small" nzType="danger" (click)="delete(data)"><i nz-icon
+                                nzType="delete"></i>删除</button>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+</div>

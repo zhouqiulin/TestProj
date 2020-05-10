@@ -44,16 +44,16 @@ const productManage = {
 
 const pageManage = {
     text: '单页管理',
-    link: '/page',
+    link: '/pages',
     icon: 'icon-docs',
     submenu: [
         {
             text: '单页列表',
-            link: '/page/list'
+            link: '/pages/list'
         },
         {
             text: '新增单页',
-            link: '/page/details'
+            link: '/pages/details'
         }
     ]
 };
