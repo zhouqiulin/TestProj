@@ -6,9 +6,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CMS.Trees
 {
-  public  class CreateUpdateTreeDto
+    public class CreateUpdateTreeDto
     {
-        public int ParentId { get; set; }
+        public Guid? ParentId { get; set; }
 
         [Required]
         public Category Category { get; set; }
@@ -19,7 +19,7 @@ namespace CMS.Trees
         public int Sort { get; set; }
     }
 
-    public class CreateUpdateTreeDto<Tkey>:CreateUpdateTreeDto
+    public class CreateUpdateTreeDto<Tkey> : CreateUpdateTreeDto
     {
         public Tkey Id { get; set; }
     }

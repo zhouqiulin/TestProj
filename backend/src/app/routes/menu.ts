@@ -61,8 +61,18 @@ const pageManage = {
 
 const systemManage = {
     text: '系统管理',
-    link: '/tree',
-    icon: 'icon-settings'
+    link: '/system',
+    icon: 'icon-settings',
+    submenu: [
+        {
+            text: '菜单管理',
+            link: '/system/menu'
+        },
+        {
+            text: '分类管理',
+            link: '/system/tree'
+        }
+    ]
 };
 
 export const menu = [

@@ -1,0 +1,43 @@
+<div class="content-heading">
+    <div>{{pageTitle}}
+        <small></small>
+    </div>
+</div>
+<div class="card card-default">
+
+    <div class="card-header clearfix">
+        <nz-radio-group [(ngModel)]="category">
+            <label nz-radio-button nzValue="Article">资讯</label>
+            <label nz-radio-button nzValue="Product">产品</label>
+            <label nz-radio-button nzValue="Page">页面</label>
+        </nz-radio-group>
+
+    </div>
+    <div class="card-body">
+
+        <nz-table #expandTable [nzData]="listOfMapData" nzTableLayout="fixed">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let data of expandTable.data">
+                    <ng-container *ngFor="let item of mapOfExpandedData[data.key]">
+                        <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
+                            <td [nzIndentSize]="item.level * 20" [nzShowExpand]="!!item.children"
+                                [(nzExpand)]="item.expand"
+                                (nzExpandChange)="collapse(mapOfExpandedData[data.key], item, $event)">
+                                {{ item.name }}
+                            </td>
+                            <td>{{ item.age }}</td>
+                            <td>{{ item.address }}</td>
+                        </tr>
+                    </ng-container>
+                </ng-container>
+            </tbody>
+        </nz-table>
+    </div>
+</div>

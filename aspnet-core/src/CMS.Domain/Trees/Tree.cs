@@ -7,7 +7,7 @@ namespace CMS.Trees
 {
     public class Tree : AuditedAggregateRoot<Guid>
     {
-        public int ParentId { get; set; }
+        public Guid? ParentId { get; set; } = null;
 
         public Category Category { get; set; }
 

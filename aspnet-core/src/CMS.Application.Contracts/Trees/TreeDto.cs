@@ -5,9 +5,9 @@ using Volo.Abp.Application.Dtos;
 
 namespace CMS.Trees
 {
-  public  class TreeDto:EntityDto<Guid>
+    public class TreeDto : EntityDto<Guid>
     {
-        public int ParentId { get; set; }
+        public Guid? ParentId { get; set; }
 
         public Category Category { get; set; }
 
