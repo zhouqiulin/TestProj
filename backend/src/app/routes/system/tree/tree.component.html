@@ -33,11 +33,11 @@
                                 {{ item.name }}
                             </td>
                             <td>
-                                <button class="mr10" nz-button nzSize="small" nzType="primary" (click)="edit(data)"><i
+                                <button class="mr10" nz-button nzSize="small" nzType="primary" (click)="edit(item)"><i
                                         nz-icon nzType="edit"></i>编辑</button>
-                                <button class="mr10" nz-button nzSize="small" nzType="primary" (click)="edit(data)"><i
-                                        nz-icon nzType="plus"></i>添加子类</button>
-                                <button nz-button nzSize="small" nzType="danger" (click)="delete(data)"><i nz-icon
+                                <button class="mr10" nz-button nzSize="small" nzType="primary"
+                                    (click)="addSubTree(item)"><i nz-icon nzType="plus"></i>添加子类</button>
+                                <button nz-button nzSize="small" nzType="danger" (click)="delete(item)"><i nz-icon
                                         nzType="delete"></i>删除</button>
                             </td>
                         </tr>
@@ -59,10 +59,12 @@
                 <input nz-input formControlName="name" id="name" />
             </nz-form-control>
         </nz-form-item>
-        <nz-form-item>
+        <nz-form-item *ngIf="treeForm.value.id">
             <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="name">父类</nz-form-label>
             <nz-form-control [nzSm]="12" [nzXs]="24">
-                <input nz-input formControlName="parentId" id="parentId" />
+                <nz-cascader formControlName="tempParentId" [nzOptions]="nzOptions" id="parentId"
+                    (ngModelChange)="onParentIdChanges($event)">
+                </nz-cascader>
             </nz-form-control>
         </nz-form-item>
     </form>

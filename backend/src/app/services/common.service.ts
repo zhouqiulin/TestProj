@@ -4,118 +4,16 @@ import { Observer, Observable } from 'rxjs';
 import { SettingsService, ImageForUse } from '../core/settings/settings.service';
 
 
-export interface TreeNodeInterface {
+export interface ITreeNode {
   key: number;
   name: string;
   age?: number;
   level?: number;
   expand?: boolean;
   address?: string;
-  children?: TreeNodeInterface[];
-  parent?: TreeNodeInterface;
+  children?: ITreeNode[];
+  parent?: ITreeNode;
 }
-
-const testList = [
-  {
-    parentId: 0,
-    category: 1,
-    name: '公司新闻',
-    sort: 0,
-    id: 'de167e08-cd91-2511-ae01-39f3f593d25a'
-  },
-  {
-    parentId: 0,
-    category: 1,
-    name: '公司新闻',
-    sort: 0,
-    id: '43e36ba8-f67d-4a75-d12d-39f3f593d25a'
-  },
-  {
-    parentId: 0,
-    category: 1,
-    name: '公司新闻',
-    sort: 0,
-    id: 'c5af2866-6466-bde9-f19c-39f3f593d27f'
-  },
-  {
-    parentId: 0,
-    category: 1,
-    name: '公司新闻',
-    sort: 0,
-    id: '5ae60b04-bed7-120c-e860-39f3f593d328'
-  },
-  {
-    parentId: 0,
-    category: 1,
-    name: '公司新闻',
-    sort: 0,
-    id: '84df5a4f-25bd-5847-3f7f-39f3f593d3c4'
-  },
-  {
-    parentId: 0,
-    category: 1,
-    name: '公司新闻',
-    sort: 0,
-    id: 'ede0aa58-59c8-f3f0-b48c-39f3f593d45c'
-  },
-  {
-    parentId: 0,
-    category: 1,
-    name: '公司新闻',
-    sort: 0,
-    id: '3b0aedf1-b109-688b-add6-39f3f593d4fa'
-  },
-  {
-    parentId: 0,
-    category: 1,
-    name: '公司新闻',
-    sort: 0,
-    id: '3a57854f-e898-68cf-8a04-39f3f593d5b5'
-  },
-  {
-    parentId: 0,
-    category: 2,
-    name: '产品发布',
-    sort: 0,
-    id: '2ad721ab-9b35-8e58-9630-39f3f5964a30'
-  },
-  {
-    parentId: 0,
-    category: 2,
-    name: '产品发布',
-    sort: 0,
-    id: 'f309dc18-9eed-c571-ba05-39f3f5964b1d'
-  },
-  {
-    parentId: 0,
-    category: 2,
-    name: '产品发布',
-    sort: 0,
-    id: '3d27e47b-33a0-dd0e-2c11-39f3f5964bd5'
-  },
-  {
-    parentId: 0,
-    category: 2,
-    name: '产品发布',
-    sort: 0,
-    id: '8bbd7dd5-254a-b297-7962-39f3f5964cf1'
-  },
-  {
-    parentId: 0,
-    category: 2,
-    name: '产品发布',
-    sort: 0,
-    id: 'b3057b5b-3d43-6328-b9c8-39f3f5964da6'
-  },
-  {
-    parentId: 0,
-    category: 2,
-    name: '产品发布',
-    sort: 0,
-    id: 'c183ef77-4d4d-3069-1e94-39f3f5964e71'
-  }
-];
-
 
 @Injectable()
 export class CommonService {
@@ -201,18 +99,34 @@ export class CommonService {
       img.onload = () => {
         const naturalWidth = img.naturalWidth;
         const naturalHeight = img.naturalHeight;
-        window.URL.revokeObjectURL(img.src!);
+        window.URL.revokeObjectURL(img.src);
         resolve(width === naturalWidth && height === naturalHeight);
       };
     });
   }
 
   // 接口数据转换树表格数据格式
-  toTreeNode(list, parentId) {
-    return list.filter(item => item.parentId === parentId).map(item => ({
-      ...item,
-      key: item.id,
-      children: this.toTreeNode(list, item.id),
-    }));
+  toTreeNode(list): ITreeNode[] {
+
+    // return list.filter(item => item.parentId === parentId).map(item => ({
+    //   ...item,
+    //   key: item.id,
+    //   children: this.toTreeNode(list, item.id),
+    // }));
+    const ids = list.map(ele => ele.id);
+
+    list.forEach(ele => {
+      ele.key = ele.id,
+        ele.children = list.filter(item => ele.id === item.parentId);
+    });
+
+    list = list.filter(ele => {
+      return !ids.includes(ele.parentId);
+    });
+
+    debugger;
+
+    return list;
+
   }
 }

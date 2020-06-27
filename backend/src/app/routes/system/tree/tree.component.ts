@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SystemService, Category } from '../../../services/system.service';
-import { CommonService, TreeNodeInterface } from 'src/app/services/common.service';
+import { CommonService, ITreeNode } from 'src/app/services/common.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 
 
 
@@ -15,21 +15,23 @@ export class TreeComponent implements OnInit {
   pageTitle = '分类管理';
 
   category: Category = Category.Article;
-  listOfMapData: TreeNodeInterface[];
-  mapOfExpandedData: { [key: string]: TreeNodeInterface[] } = {};
-  treeModalVisible = true;
+  listOfMapData: ITreeNode[];
+  mapOfExpandedData: { [key: string]: ITreeNode[] } = {};
+  treeModalVisible = false;
   modalTitle = '添加类别';
   treeForm: FormGroup;
+  nzOptions;
+  ParentId;
   getTreeList() {
     this.systemService.getTreeList(this.category).subscribe(res => {
-      this.listOfMapData = this.commonService.toTreeNode(res.items, null);
+      this.listOfMapData = this.commonService.toTreeNode(res.items);
       this.listOfMapData.forEach(item => {
         this.mapOfExpandedData[item.key] = this.convertTreeToList(item);
       });
     });
   }
 
-  collapse(array: TreeNodeInterface[], data: TreeNodeInterface, $event: boolean): void {
+  collapse(array: ITreeNode[], data: ITreeNode, $event: boolean): void {
     if (!$event) {
       if (data.children) {
         data.children.forEach(d => {
@@ -43,9 +45,9 @@ export class TreeComponent implements OnInit {
     }
   }
 
-  convertTreeToList(root: TreeNodeInterface): TreeNodeInterface[] {
-    const stack: TreeNodeInterface[] = [];
-    const array: TreeNodeInterface[] = [];
+  convertTreeToList(root: ITreeNode): ITreeNode[] {
+    const stack: ITreeNode[] = [];
+    const array: ITreeNode[] = [];
     const hashMap = {};
     stack.push({ ...root, level: 0, expand: false });
 
@@ -62,7 +64,7 @@ export class TreeComponent implements OnInit {
     return array;
   }
 
-  visitNode(node: TreeNodeInterface, hashMap: { [key: string]: boolean }, array: TreeNodeInterface[]): void {
+  visitNode(node: ITreeNode, hashMap: { [key: string]: boolean }, array: ITreeNode[]): void {
     if (!hashMap[node.key]) {
       hashMap[node.key] = true;
       array.push(node);
@@ -78,6 +80,58 @@ export class TreeComponent implements OnInit {
       parentId: [null]
     });
     this.treeModalVisible = true;
+  }
+
+  addSubTree(data) {
+    this.modalTitle = '添加子类别';
+    this.treeForm = this.fb.group({
+      id: [null],
+      name: [null, [Validators.required]],
+      category: [this.category],
+      parentId: [data.id]
+    });
+    this.treeModalVisible = true;
+  }
+  edit(data) {
+    this.modalTitle = '编辑类别';
+
+    const parentId = [];
+    let parent = data.parent;
+    while (parent && parent.id) {
+      parentId.unshift(parent.id);
+      parent = parent.parent;
+    }
+    this.treeForm = this.fb.group({
+      id: [data.id],
+      name: [data.name, [Validators.required]],
+      category: [this.category],
+      parentId: [null],
+      tempParentId: [parentId],
+    });
+    this.systemService.getCascaderTree(this.category).subscribe(res => {
+      this.nzOptions = res;
+    });
+    this.treeModalVisible = true;
+  }
+  onParentIdChanges(event) {
+    this.treeForm.patchValue({ parentId: event[event.length - 1] });
+  }
+  delete(data) {
+
+    this.modal.confirm({
+      nzTitle: '确定删除?',
+      nzContent: '<b style="color: red;">删除后无法再恢复！</b>',
+      nzOkType: 'danger',
+      nzOnOk: () => this.systemService.deleteTree(data.id).subscribe(res => {
+        this.msg.success('删除成功');
+        this.getTreeList();
+        this.treeModalVisible = false;
+      }),
+      nzOnCancel: () => console.log('Cancel')
+    });
+
+
+
   }
   submitForm() {
     for (const i of Object.keys(this.treeForm.controls)) {
@@ -108,7 +162,8 @@ export class TreeComponent implements OnInit {
     private systemService: SystemService,
     private commonService: CommonService,
     private fb: FormBuilder,
-    private msg: NzMessageService
+    private msg: NzMessageService,
+    private modal: NzModalService,
   ) { }
 
   ngOnInit(): void {

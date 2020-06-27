@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, observable } from 'rxjs';
+import { valueFunctionProp } from 'ng-zorro-antd';
+
 
 export enum Category {
   Article = 'Article',
@@ -20,10 +22,19 @@ interface GetTreeListResDto {
   items: Tree[];
 }
 
+interface CascaderTree {
+  parentId: string;
+  value: string;
+  label: string;
+  isLeaf: boolean;
+  children: CascaderTree[];
+}
 
 
 @Injectable()
 export class SystemService {
+
+  cascaderTree: CascaderTree;
 
   constructor(private http: HttpClient) { }
 
@@ -57,6 +68,39 @@ export class SystemService {
   deleteTree(id: string): Observable<Tree> {
     const url = `/api/app/Tree/${id}`;
     return this.http.delete<Tree>(url);
+  }
+
+  // 获取tree级联数据
+  getCascaderTree(category: Category): Observable<CascaderTree[]> {
+
+    return Observable.create(observer => {
+      this.getTreeList(category).subscribe(res => {
+
+        const ids = res.items.map(ele => ele.id);
+
+        let cascaderTree: CascaderTree[];
+
+        cascaderTree = res.items.map(ele => {
+          return {
+            parentId: ele.parentId,
+            value: ele.id,
+            label: ele.name,
+            isLeaf: res.items.every(item => ele.id !== item.parentId),
+            children: []
+          };
+        });
+
+        cascaderTree.forEach(ele => {
+          ele.children = cascaderTree.filter(item => ele.value === item.parentId);
+        });
+
+        cascaderTree = cascaderTree.filter(ele => {
+          return !ids.includes(ele.parentId);
+        });
+        observer.next(cascaderTree);
+      });
+    });
+
   }
 
 
