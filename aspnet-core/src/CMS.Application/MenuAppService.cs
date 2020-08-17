@@ -8,7 +8,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace CMS
 {
-    public class MenuAppService : CrudAppService<Menu, MenuDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateMenuDto>, IMenuAppService
+    public class MenuAppService : CrudAppService<Menu, MenuDto, Guid,GetMenuListInputDto, CreateUpdateMenuDto>, IMenuAppService
     {
         private readonly IRepository<Menu, Guid> _repository;
         private readonly IMenuRepository _menuRepository;

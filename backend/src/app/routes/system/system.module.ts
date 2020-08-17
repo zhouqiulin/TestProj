@@ -3,9 +3,11 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { SystemService } from '../../services/system.service';
 import { TreeComponent } from './tree/tree.component';
+import { MenuComponent } from './menu/menu.component';
 
 const routes: Routes = [
   { path: 'tree', component: TreeComponent },
+  { path: 'menu', component: MenuComponent }
 ];
 
 @NgModule({
@@ -13,7 +15,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule
   ],
-  declarations: [TreeComponent],
+  declarations: [TreeComponent, MenuComponent],
   exports: [
     RouterModule
   ],

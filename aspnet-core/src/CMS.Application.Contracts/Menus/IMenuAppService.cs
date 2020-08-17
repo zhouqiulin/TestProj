@@ -8,8 +8,10 @@ using CMS.Menus;
 
 namespace CMS
 {
-    public interface IMenuAppService : ICrudAppService<MenuDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateMenuDto>
+    public interface IMenuAppService : ICrudAppService<MenuDto, Guid, GetMenuListInputDto, CreateUpdateMenuDto>
     {
-        public Task<IList<MenuDto>> UpdateRange(IList<CreateUpdateMenuDto<Guid>> createUpdateArticleDtos);
+      
     }
+
+  
 }

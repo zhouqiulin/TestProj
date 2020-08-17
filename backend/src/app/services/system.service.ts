@@ -30,6 +30,17 @@ interface CascaderTree {
   children: CascaderTree[];
 }
 
+interface Menu {
+  Id: string;
+  type: string;
+  refId: string;
+}
+
+
+interface GetMenuListResDto {
+  totalClunt: number;
+  item: Menu[];
+}
 
 @Injectable()
 export class SystemService {
@@ -103,5 +114,10 @@ export class SystemService {
 
   }
 
-
+  // 获取Menu列表
+  getMenuList(): Observable<GetMenuListResDto> {
+    const url = '/api/app/menu';
+    return this.http.get<GetMenuListResDto>(url);
+  }
 }
+

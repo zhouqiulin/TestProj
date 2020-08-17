@@ -1,0 +1,67 @@
+<div class="content-heading">
+    <div>{{pageTitle}}
+        <small></small>
+    </div>
+</div>
+<div class="card card-default">
+
+    <div class="card-header clearfix">
+
+    </div>
+    <div class="card-body">
+
+        <nz-table #expandTable [nzData]="listOfMapData" nzTableLayout="fixed" nzPageSize="100000"
+            nzShowPagination="false">
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>类型</th>
+                    <th>关联ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let data of expandTable.data">
+                    <ng-container *ngFor="let item of mapOfExpandedData[data.key]">
+                        <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
+                            <td [nzIndentSize]="item.level * 20" [nzShowExpand]="item.children.length>0"
+                                [(nzExpand)]="item.expand"
+                                (nzExpandChange)="collapse(mapOfExpandedData[data.key], item, $event)">
+                                {{ item.name }}
+                            </td>
+                            <td>
+                                <button class="mr10" nz-button nzSize="small" nzType="primary" (click)="edit(item)"><i
+                                        nz-icon nzType="edit"></i>编辑</button>
+                                <button class="mr10" nz-button nzSize="small" nzType="primary"
+                                    (click)="addSubTree(item)"><i nz-icon nzType="plus"></i>添加子类</button>
+                                <button nz-button nzSize="small" nzType="danger" (click)="delete(item)"><i nz-icon
+                                        nzType="delete"></i>删除</button>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </ng-container>
+            </tbody>
+        </nz-table>
+        <button class="mt-3" nz-button nzType="primary" (click)="addTree()"><i nz-icon nzType="plus"></i>添加</button>
+    </div>
+</div>
+
+
+<nz-modal [nzVisible]="treeModalVisible" [nzTitle]="modalTitle" (nzOnCancel)="treeModalVisible = false"
+    (nzOnOk)="submitForm()">
+    <form class="main" nz-form [formGroup]="treeForm">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">名称</nz-form-label>
+            <nz-form-control [nzSm]="12" [nzXs]="24" nzErrorTip="请输入名称">
+                <input nz-input formControlName="name" id="name" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="treeForm.value.id">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="name">父类</nz-form-label>
+            <nz-form-control [nzSm]="12" [nzXs]="24">
+                <nz-cascader formControlName="tempParentId" [nzOptions]="nzOptions" id="parentId"
+                    (ngModelChange)="onParentIdChanges($event)">
+                </nz-cascader>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-modal>
