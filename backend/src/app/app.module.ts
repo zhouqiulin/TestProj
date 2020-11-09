@@ -38,13 +38,7 @@ export function createTranslateLoader(http: HttpClient) {
             }
         })
     ],
-    providers: [
-        CommonService
-    ],
+    providers: [],
     bootstrap: [AppComponent]
 })
-export class AppModule {
-    constructor() {
-        // 检查是否有token
-    }
-}
+export class AppModule { }

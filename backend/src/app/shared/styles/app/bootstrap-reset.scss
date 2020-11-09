@@ -178,8 +178,8 @@ hr {
     &.btn-warning {
         color: #fff;
     }
-    &.btn-outline-warning {
-        @include hover-focus-active {
+    &.btn-outline-warning:not(:disabled) {
+        &:hover, &:active {
             color: #fff;
         }
     }

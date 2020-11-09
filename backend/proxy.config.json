@@ -1,7 +1,6 @@
 {
   "/api": {
-    "target-bak": "http://cmsapi.zql.me/",
-    "target": "https://localhost:44376/",
+    "target": "http://cmsapi.zql.me/",
     "secure": false,
     "changeOrigin": true
   },

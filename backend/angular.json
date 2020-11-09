@@ -22,7 +22,11 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "aot": false,
+            "aot": true,
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "chart.js"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets",
@@ -66,13 +70,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "3mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "4mb",
+                  "maximumError": "6mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
+                  "maximumWarning": "15kb",
+                  "maximumError": "30kb"
                 }
               ]
             }
@@ -146,7 +150,6 @@
           }
         }
       }
-    }
-  },
+    }},
   "defaultProject": "ng2angle"
 }
