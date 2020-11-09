@@ -5,7 +5,7 @@
 </div>
 
 <nz-spin class="card card-default" [nzSpinning]="dataLoading">
-    <form class="main" nz-form [formGroup]="pageForm" (ngSubmit)="submitForm($event, pageForm.value)"
+    <form class="main" nz-form [formGroup]="pageForm" (ngSubmit)="submitForm()"
         nzLayout="horizontal">
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">名称</nz-form-label>

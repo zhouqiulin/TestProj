@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PagesService } from '../../../services/pages.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UploadFile, NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable, Observer } from 'rxjs';
 import { SettingsService } from 'src/app/core/settings/settings.service';
+import { NzUploadFile } from 'ng-zorro-antd/upload';
 
 const options = [
   {
@@ -18,16 +19,16 @@ const options = [
           {
             value: 'xihu',
             label: 'West Lake',
-            isLeaf: true
-          }
-        ]
+            isLeaf: true,
+          },
+        ],
       },
       {
         value: 'ningbo',
         label: 'Ningbo',
-        isLeaf: true
-      }
-    ]
+        isLeaf: true,
+      },
+    ],
   },
   {
     value: 'jiangsu',
@@ -40,18 +41,18 @@ const options = [
           {
             value: 'zhonghuamen',
             label: 'Zhong Hua Men',
-            isLeaf: true
-          }
-        ]
-      }
-    ]
-  }
+            isLeaf: true,
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 @Component({
   selector: 'app-details',
   templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss']
+  styleUrls: ['./details.component.scss'],
 })
 export class DetailsComponent implements OnInit {
   pageTitle: string;
@@ -62,7 +63,7 @@ export class DetailsComponent implements OnInit {
   coverUrl: string;
   uploadFileUrl = '/api/app/file/uploadFile';
   showMore = false;
-  uploadFile: UploadFile;
+  uploadFile: NzUploadFile;
   editorConfig = this.settings.getEditorSetting();
   dataLoading = false;
   constructor(
@@ -72,17 +73,12 @@ export class DetailsComponent implements OnInit {
     private fb: FormBuilder,
     private pagesSerive: PagesService,
     private msg: NzMessageService
-  ) {
-
-  }
+  ) {}
 
   toggleMore() {
     this.showMore = !this.showMore;
     return false;
   }
-
-
-
 
   beforeUpload = (file: File) => {
     return new Observable((observer: Observer<boolean>) => {
@@ -99,7 +95,7 @@ export class DetailsComponent implements OnInit {
         return;
       }
       // check height
-      this.checkImageDimension(file).then(dimensionRes => {
+      this.checkImageDimension(file).then((dimensionRes) => {
         if (!dimensionRes) {
           this.msg.error('Image only 300x300 above');
           observer.complete();
@@ -110,7 +106,7 @@ export class DetailsComponent implements OnInit {
         observer.complete();
       });
     });
-  }
+  };
 
   private getBase64(img: File, callback: (img: string) => void): void {
     const reader = new FileReader();
@@ -119,7 +115,7 @@ export class DetailsComponent implements OnInit {
   }
 
   private checkImageDimension(file: File): Promise<boolean> {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const img = new Image(); // create image
       img.src = window.URL.createObjectURL(file);
       img.onload = () => {
@@ -131,7 +127,7 @@ export class DetailsComponent implements OnInit {
     });
   }
 
-  handleChange(info: { file: UploadFile, }): void {
+  handleChange(info: { file: NzUploadFile }): void {
     switch (info.file.status) {
       case 'uploading':
         this.loading = true;
@@ -143,7 +139,7 @@ export class DetailsComponent implements OnInit {
           this.coverUrl = img;
         });
         this.pageForm.patchValue({
-          coverUrl: info.file.response.path
+          coverUrl: info.file.response.path,
         });
         break;
       case 'error':
@@ -165,12 +161,13 @@ export class DetailsComponent implements OnInit {
     }
     if (this.pageForm.status === 'VALID') {
       if (this.id) {
-        this.pagesSerive.putPage(this.id, this.pageForm.value).subscribe(res => {
-          this.msg.success('修改成功');
-        });
-
+        this.pagesSerive
+          .putPage(this.id, this.pageForm.value)
+          .subscribe((res) => {
+            this.msg.success('修改成功');
+          });
       } else {
-        this.pagesSerive.addPage(this.pageForm.value).subscribe(res => {
+        this.pagesSerive.addPage(this.pageForm.value).subscribe((res) => {
           this.msg.success('添加成功');
           this.router.navigate(['/pages/list']);
         });
@@ -188,12 +185,12 @@ export class DetailsComponent implements OnInit {
       content: [null],
     });
 
-    this.activatedRoute.queryParams.subscribe(queyParams => {
+    this.activatedRoute.queryParams.subscribe((queyParams) => {
       this.id = queyParams.id;
       if (this.id) {
         this.pageTitle = '编辑页面';
         this.dataLoading = true;
-        this.pagesSerive.getPage(queyParams.id).subscribe(res => {
+        this.pagesSerive.getPage(queyParams.id).subscribe((res) => {
           this.dataLoading = false;
           this.pageForm.setValue({
             name: res.name,
@@ -201,14 +198,12 @@ export class DetailsComponent implements OnInit {
             description: res.description,
             keywords: res.keywords,
             treeId: '00000000-0000-0000-0000-000000000000',
-            content: res.content
+            content: res.content,
           });
         });
       } else {
         this.pageTitle = '新增页面';
       }
     });
-
   }
-
 }

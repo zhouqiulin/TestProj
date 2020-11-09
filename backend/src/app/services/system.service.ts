@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, observable } from 'rxjs';
-import { valueFunctionProp } from 'ng-zorro-antd';
-
 
 export enum Category {
   Article = 'Article',
   Product = 'Product',
-  Page = 'Page'
+  Page = 'Page',
 }
 
 interface Tree {
@@ -36,7 +34,6 @@ interface Menu {
   refId: string;
 }
 
-
 interface GetMenuListResDto {
   totalClunt: number;
   item: Menu[];
@@ -44,16 +41,14 @@ interface GetMenuListResDto {
 
 @Injectable()
 export class SystemService {
-
   cascaderTree: CascaderTree;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // 获取Tree列表
   getTreeList(category: Category): Observable<GetTreeListResDto> {
     const url = '/api/app/tree';
-    const params = new HttpParams()
-      .append('Category', category);
+    const params = new HttpParams().append('Category', category);
     return this.http.get<GetTreeListResDto>(url, { params });
   }
 
@@ -83,35 +78,34 @@ export class SystemService {
 
   // 获取tree级联数据
   getCascaderTree(category: Category): Observable<CascaderTree[]> {
-
-    return Observable.create(observer => {
-      this.getTreeList(category).subscribe(res => {
-
-        const ids = res.items.map(ele => ele.id);
+    return Observable.create((observer) => {
+      this.getTreeList(category).subscribe((res) => {
+        const ids = res.items.map((ele) => ele.id);
 
         let cascaderTree: CascaderTree[];
 
-        cascaderTree = res.items.map(ele => {
+        cascaderTree = res.items.map((ele) => {
           return {
             parentId: ele.parentId,
             value: ele.id,
             label: ele.name,
-            isLeaf: res.items.every(item => ele.id !== item.parentId),
-            children: []
+            isLeaf: res.items.every((item) => ele.id !== item.parentId),
+            children: [],
           };
         });
 
-        cascaderTree.forEach(ele => {
-          ele.children = cascaderTree.filter(item => ele.value === item.parentId);
+        cascaderTree.forEach((ele) => {
+          ele.children = cascaderTree.filter(
+            (item) => ele.value === item.parentId
+          );
         });
 
-        cascaderTree = cascaderTree.filter(ele => {
+        cascaderTree = cascaderTree.filter((ele) => {
           return !ids.includes(ele.parentId);
         });
         observer.next(cascaderTree);
       });
     });
-
   }
 
   // 获取Menu列表
@@ -120,4 +114,3 @@ export class SystemService {
     return this.http.get<GetMenuListResDto>(url);
   }
 }
-

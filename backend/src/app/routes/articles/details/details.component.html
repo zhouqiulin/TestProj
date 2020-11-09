@@ -5,7 +5,7 @@
 </div>
 
 <nz-spin class="card card-default" [nzSpinning]="dataLoading">
-    <form class="main" nz-form [formGroup]="articleForm" (ngSubmit)="submitForm($event, articleForm.value)"
+    <form class="main" nz-form [formGroup]="articleForm" (ngSubmit)="submitForm()"
         nzLayout="horizontal">
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="title">标题</nz-form-label>
@@ -36,7 +36,7 @@
         <nz-form-item *ngIf="showMore">
             <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="treeId">封面图片</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="The input is not valid E-mail!">
-                <nz-upload class="avatar-uploader" [nzCustomRequest]="customReq" [nzAction]="uploadFileUrl"
+                <nz-upload class="avatar-uploader" [nzAction]="uploadFileUrl"
                     nzName="file" [nzFileList]="uploadFile" nzListType="picture-card" [nzShowUploadList]="false"
                     [nzBeforeUpload]="beforeUpload" (nzChange)="handleChange($event)">
                     <ng-container *ngIf="!coverUrl">

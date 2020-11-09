@@ -23,9 +23,6 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { DatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
-import { NgZorroAntdModule, NZ_I18N, zh_CN } from 'ng-zorro-antd';
-
-
 import { FlotDirective } from './directives/flot/flot.directive';
 import { SparklineDirective } from './directives/sparkline/sparkline.directive';
 import { EasypiechartDirective } from './directives/easypiechart/easypiechart.directive';
@@ -37,98 +34,134 @@ import { ScrollableDirective } from './directives/scrollable/scrollable.directiv
 import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
 import { TINYMCE_SCRIPT_SRC, EditorModule } from '@tinymce/tinymce-angular';
 
+// Zorro
+
+// 配置 ng-zorro-antd 国际化
+import { NZ_I18N, zh_CN } from 'ng-zorro-antd/i18n';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzTreeModule } from 'ng-zorro-antd/tree';
+import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzCascaderModule } from 'ng-zorro-antd/cascader';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { CommonService } from '../services/common.service';
+
+const ZorroModules = [
+  NzGridModule,
+  NzButtonModule,
+  NzUploadModule,
+  NzMessageModule,
+  NzModalModule,
+  NzTableModule,
+  NzTreeModule,
+  NzTreeSelectModule,
+  NzFormModule,
+  NzCascaderModule,
+  NzInputModule,
+  NzSpinModule,
+  NzIconModule,
+  NzRadioModule,
+];
+
 // https://angular.io/styleguide#!#04-10
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        AccordionModule.forRoot(),
-        AlertModule.forRoot(),
-        ButtonsModule.forRoot(),
-        CarouselModule.forRoot(),
-        CollapseModule.forRoot(),
-        DatepickerModule.forRoot(),
-        BsDatepickerModule.forRoot(),
-        BsDropdownModule.forRoot(),
-        ModalModule.forRoot(),
-        PaginationModule.forRoot(),
-        ProgressbarModule.forRoot(),
-        RatingModule.forRoot(),
-        TabsModule.forRoot(),
-        TimepickerModule.forRoot(),
-        TooltipModule.forRoot(),
-        PopoverModule.forRoot(),
-        TypeaheadModule.forRoot(),
-        ToastrModule.forRoot(),
-        NgZorroAntdModule,
-        EditorModule
-    ],
-    providers: [
-        ColorsService
-    ],
-    declarations: [
-        FlotDirective,
-        SparklineDirective,
-        EasypiechartDirective,
-        CheckallDirective,
-        VectormapDirective,
-        NowDirective,
-        ScrollableDirective,
-        JqcloudDirective
-    ],
-    exports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        RouterModule,
-        AccordionModule,
-        AlertModule,
-        ButtonsModule,
-        CarouselModule,
-        CollapseModule,
-        DatepickerModule,
-        BsDatepickerModule,
-        BsDropdownModule,
-        ModalModule,
-        PaginationModule,
-        ProgressbarModule,
-        RatingModule,
-        TabsModule,
-        TimepickerModule,
-        TooltipModule,
-        PopoverModule,
-        TypeaheadModule,
-        ToastrModule,
-        FlotDirective,
-        SparklineDirective,
-        EasypiechartDirective,
-        CheckallDirective,
-        VectormapDirective,
-        NowDirective,
-        ScrollableDirective,
-        JqcloudDirective,
-        NgZorroAntdModule,
-        EditorModule,
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    AccordionModule.forRoot(),
+    AlertModule.forRoot(),
+    ButtonsModule.forRoot(),
+    CarouselModule.forRoot(),
+    CollapseModule.forRoot(),
+    DatepickerModule.forRoot(),
+    BsDatepickerModule.forRoot(),
+    BsDropdownModule.forRoot(),
+    ModalModule.forRoot(),
+    PaginationModule.forRoot(),
+    ProgressbarModule.forRoot(),
+    RatingModule.forRoot(),
+    TabsModule.forRoot(),
+    TimepickerModule.forRoot(),
+    TooltipModule.forRoot(),
+    PopoverModule.forRoot(),
+    TypeaheadModule.forRoot(),
+    ToastrModule.forRoot(),
+    ...ZorroModules,
+    EditorModule,
+  ],
+  providers: [ColorsService, CommonService],
+  declarations: [
+    FlotDirective,
+    SparklineDirective,
+    EasypiechartDirective,
+    CheckallDirective,
+    VectormapDirective,
+    NowDirective,
+    ScrollableDirective,
+    JqcloudDirective,
+  ],
+  exports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    RouterModule,
+    AccordionModule,
+    AlertModule,
+    ButtonsModule,
+    CarouselModule,
+    CollapseModule,
+    DatepickerModule,
+    BsDatepickerModule,
+    BsDropdownModule,
+    ModalModule,
+    PaginationModule,
+    ProgressbarModule,
+    RatingModule,
+    TabsModule,
+    TimepickerModule,
+    TooltipModule,
+    PopoverModule,
+    TypeaheadModule,
+    ToastrModule,
+    FlotDirective,
+    SparklineDirective,
+    EasypiechartDirective,
+    CheckallDirective,
+    VectormapDirective,
+    NowDirective,
+    ScrollableDirective,
+    JqcloudDirective,
+    ...ZorroModules,
+    EditorModule,
+  ],
 })
 
 // https://github.com/ocombe/ng2-translate/issues/209
 export class SharedModule {
-    static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: SharedModule,
-            providers: [
-                {
-                    provide: NZ_I18N,
-                    useValue: zh_CN
-                },
-                { provide: TINYMCE_SCRIPT_SRC,
-                  useValue: '/assets/tinymce/tinymce.min.js'
-                }
-            ]
-        };
-    }
+  static forRoot(): ModuleWithProviders<SharedModule> {
+    return {
+      ngModule: SharedModule,
+      providers: [
+        {
+          provide: NZ_I18N,
+          useValue: zh_CN,
+        },
+        {
+          provide: TINYMCE_SCRIPT_SRC,
+          useValue: '/assets/tinymce/tinymce.min.js',
+        },
+      ],
+    };
+  }
 }

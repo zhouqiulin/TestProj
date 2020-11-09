@@ -14,7 +14,7 @@
                 nzPlaceHolder="选择类别" [(ngModel)]="treeId">
             </nz-tree-select>
             <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                <input type="text" nz-input placeholder="标题" [(ngModel)]="title" />
+                <input type="text" nz-input placeholder="标题"  />
             </nz-input-group>
             <ng-template #suffixIconButton>
                 <button nz-button nzType="primary" nzSearch (click)="searchData()"><i nz-icon

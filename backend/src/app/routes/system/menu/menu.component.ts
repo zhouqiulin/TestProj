@@ -2,14 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { SystemService, Category } from '../../../services/system.service';
 import { CommonService, ITreeNode } from 'src/app/services/common.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-
-
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-system-menu',
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss']
+  styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent implements OnInit {
   pageTitle = '菜单管理';
@@ -23,9 +22,9 @@ export class MenuComponent implements OnInit {
   nzOptions;
   ParentId;
   getTreeList() {
-    this.systemService.getTreeList(this.category).subscribe(res => {
+    this.systemService.getTreeList(this.category).subscribe((res) => {
       this.listOfMapData = this.commonService.toTreeNode(res.items);
-      this.listOfMapData.forEach(item => {
+      this.listOfMapData.forEach((item) => {
         this.mapOfExpandedData[item.key] = this.convertTreeToList(item);
       });
     });
@@ -34,8 +33,8 @@ export class MenuComponent implements OnInit {
   collapse(array: ITreeNode[], data: ITreeNode, $event: boolean): void {
     if (!$event) {
       if (data.children) {
-        data.children.forEach(d => {
-          const target = array.find(a => a.key === d.key);
+        data.children.forEach((d) => {
+          const target = array.find((a) => a.key === d.key);
           target.expand = false;
           this.collapse(array, target, false);
         });
@@ -56,7 +55,12 @@ export class MenuComponent implements OnInit {
       this.visitNode(node, hashMap, array);
       if (node.children) {
         for (let i = node.children.length - 1; i >= 0; i--) {
-          stack.push({ ...node.children[i], level: node.level + 1, expand: false, parent: node });
+          stack.push({
+            ...node.children[i],
+            level: node.level + 1,
+            expand: false,
+            parent: node,
+          });
         }
       }
     }
@@ -64,7 +68,11 @@ export class MenuComponent implements OnInit {
     return array;
   }
 
-  visitNode(node: ITreeNode, hashMap: { [key: string]: boolean }, array: ITreeNode[]): void {
+  visitNode(
+    node: ITreeNode,
+    hashMap: { [key: string]: boolean },
+    array: ITreeNode[]
+  ): void {
     if (!hashMap[node.key]) {
       hashMap[node.key] = true;
       array.push(node);
@@ -77,7 +85,7 @@ export class MenuComponent implements OnInit {
       id: [null],
       name: [null, [Validators.required]],
       category: [this.category],
-      parentId: [null]
+      parentId: [null],
     });
     this.treeModalVisible = true;
   }
@@ -88,7 +96,7 @@ export class MenuComponent implements OnInit {
       id: [null],
       name: [null, [Validators.required]],
       category: [this.category],
-      parentId: [data.id]
+      parentId: [data.id],
     });
     this.treeModalVisible = true;
   }
@@ -108,7 +116,7 @@ export class MenuComponent implements OnInit {
       parentId: [null],
       tempParentId: [parentId],
     });
-    this.systemService.getCascaderTree(this.category).subscribe(res => {
+    this.systemService.getCascaderTree(this.category).subscribe((res) => {
       this.nzOptions = res;
     });
     this.treeModalVisible = true;
@@ -117,21 +125,18 @@ export class MenuComponent implements OnInit {
     this.treeForm.patchValue({ parentId: event[event.length - 1] });
   }
   delete(data) {
-
     this.modal.confirm({
       nzTitle: '确定删除?',
       nzContent: '<b style="color: red;">删除后无法再恢复！</b>',
       nzOkType: 'danger',
-      nzOnOk: () => this.systemService.deleteTree(data.id).subscribe(res => {
-        this.msg.success('删除成功');
-        this.getTreeList();
-        this.treeModalVisible = false;
-      }),
-      nzOnCancel: () => console.log('Cancel')
+      nzOnOk: () =>
+        this.systemService.deleteTree(data.id).subscribe((res) => {
+          this.msg.success('删除成功');
+          this.getTreeList();
+          this.treeModalVisible = false;
+        }),
+      nzOnCancel: () => console.log('Cancel'),
     });
-
-
-
   }
   submitForm() {
     for (const i of Object.keys(this.treeForm.controls)) {
@@ -141,21 +146,21 @@ export class MenuComponent implements OnInit {
 
     if (this.treeForm.status === 'VALID') {
       if (this.treeForm.value.id) {
-        this.systemService.putTree(this.treeForm.value.id, this.treeForm.value).subscribe(res => {
-          this.msg.success('修改成功');
-          this.getTreeList();
-          this.treeModalVisible = false;
-        });
+        this.systemService
+          .putTree(this.treeForm.value.id, this.treeForm.value)
+          .subscribe((res) => {
+            this.msg.success('修改成功');
+            this.getTreeList();
+            this.treeModalVisible = false;
+          });
       } else {
-        this.systemService.addTree(this.treeForm.value).subscribe(res => {
+        this.systemService.addTree(this.treeForm.value).subscribe((res) => {
           this.msg.success('添加成功');
           this.getTreeList();
           this.treeModalVisible = false;
         });
       }
     }
-
-
   }
 
   constructor(
@@ -163,8 +168,8 @@ export class MenuComponent implements OnInit {
     private commonService: CommonService,
     private fb: FormBuilder,
     private msg: NzMessageService,
-    private modal: NzModalService,
-  ) { }
+    private modal: NzModalService
+  ) {}
 
   ngOnInit(): void {
     this.getTreeList();
@@ -172,8 +177,7 @@ export class MenuComponent implements OnInit {
       id: [null],
       name: [null, [Validators.required]],
       category: [null],
-      parentId: [null]
+      parentId: [null],
     });
   }
-
 }
