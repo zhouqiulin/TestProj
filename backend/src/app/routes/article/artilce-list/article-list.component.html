@@ -7,7 +7,7 @@
 <div class="card card-default">
   <div class="card-header clearfix">
     <div class="options">
-      <button nz-button nzType="primary"><i nz-icon nzType="plus"></i>添加</button>
+      <button nz-button nzType="primary" (click)="addArticle()"><i nz-icon nzType="plus"></i>添加</button>
     </div>
     <div class="search">
       <nz-tree-select style="width: 250px" [nzExpandedKeys]="expandKeys" [nzNodes]="nodes" nzShowSearch

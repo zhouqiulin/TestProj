@@ -17,15 +17,17 @@ interface GetArticleListResDto {
   items: Article[];
 }
 
-
-
 @Injectable()
-export class ArticlesService {
-
-  constructor(private http: HttpClient) { }
+export class ArticleService {
+  constructor(private http: HttpClient) {}
 
   // 获取Article列表
-  getArticleList(pageIndex: number, pageSize: number, title: string, sorting: string): Observable<GetArticleListResDto> {
+  getArticleList(
+    pageIndex: number,
+    pageSize: number,
+    title: string,
+    sorting: string
+  ): Observable<GetArticleListResDto> {
     const url = '/api/app/article';
     const params = new HttpParams()
       .append('Title', title)
@@ -58,6 +60,4 @@ export class ArticlesService {
     const url = `/api/app/article/${id}`;
     return this.http.delete<Article>(url);
   }
-
-
 }

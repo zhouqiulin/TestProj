@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { ArticlesService } from '../../../services/articles.service';
+import { ArticleService } from '../../../services/article.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-articles-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
+  templateUrl: './article-list.component.html',
+  styleUrls: ['./article-list.component.scss'],
 })
-export class ListComponent implements OnInit {
+export class ArticleListComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private route: Router,
-    private articlesSerive: ArticlesService,
+    private articlesSerive: ArticleService,
     private modal: NzModalService,
     private msg: NzMessageService
   ) {}
@@ -55,6 +55,10 @@ export class ListComponent implements OnInit {
       ],
     },
   ];
+
+  addArticle(): void {
+    this.route.navigate(['/articles/details']);
+  }
 
   getData() {
     this.loading = true;

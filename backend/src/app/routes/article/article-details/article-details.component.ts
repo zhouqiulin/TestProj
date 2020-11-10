@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ArticlesService } from '../../../services/articles.service';
+import { ArticleService } from '../../../services/article.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable, Observer } from 'rxjs';
@@ -51,10 +51,10 @@ const options = [
 
 @Component({
   selector: 'app-details',
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss'],
+  templateUrl: './article-details.component.html',
+  styleUrls: ['./article-details.component.scss'],
 })
-export class DetailsComponent implements OnInit {
+export class ArticleDetailsComponent implements OnInit {
   pageTitle: string;
   id: string;
   articleForm: FormGroup;
@@ -71,7 +71,7 @@ export class DetailsComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private settings: SettingsService,
     private fb: FormBuilder,
-    private articlesSerive: ArticlesService,
+    private articlesSerive: ArticleService,
     private msg: NzMessageService
   ) {}
 
@@ -199,7 +199,6 @@ export class DetailsComponent implements OnInit {
             from: res.from,
             content: res.content,
           });
-          debugger;
           this.coverUrl = res.coverUrl;
         });
       } else {
