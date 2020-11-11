@@ -5,13 +5,15 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Sqlite;
 using Volo.Abp.Modularity;
 
 namespace CMS.EntityFrameworkCore
 {
     [DependsOn(
         typeof(CMSEntityFrameworkCoreDbMigrationsModule),
-        typeof(CMSTestBaseModule)
+        typeof(CMSTestBaseModule),
+        typeof(AbpEntityFrameworkCoreSqliteModule)
         )]
     public class CMSEntityFrameworkCoreTestModule : AbpModule
     {
@@ -28,7 +30,10 @@ namespace CMS.EntityFrameworkCore
 
             services.Configure<AbpDbContextOptions>(options =>
             {
-                options.Configure(context => { context.DbContextOptions.UseSqlite(_sqliteConnection); });
+                options.Configure(context =>
+                {
+                    context.DbContextOptions.UseSqlite(_sqliteConnection);
+                });
             });
         }
 

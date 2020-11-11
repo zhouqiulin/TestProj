@@ -27,6 +27,11 @@ namespace CMS.EntityFrameworkCore
         )]
     public class CMSEntityFrameworkCoreModule : AbpModule
     {
+        public override void PreConfigureServices(ServiceConfigurationContext context)
+        {
+            CMSEfCoreEntityExtensionMappings.Configure();
+        }
+
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             context.Services.AddAbpDbContext<CMSDbContext>(options =>

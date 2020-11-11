@@ -9,6 +9,7 @@ using CMS.Pages;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.Modeling;
+using Volo.Abp.Identity;
 using Volo.Abp.Users.EntityFrameworkCore;
 
 namespace CMS.EntityFrameworkCore
@@ -55,12 +56,14 @@ namespace CMS.EntityFrameworkCore
 
             builder.Entity<AppUser>(b =>
             {
-                b.ToTable("AbpUsers"); //Sharing the same table "AbpUsers" with the IdentityUser
+                b.ToTable(AbpIdentityDbProperties.DbTablePrefix + "Users"); //Sharing the same table "AbpUsers" with the IdentityUser
+                
                 b.ConfigureByConvention();
                 b.ConfigureAbpUser();
 
-                //Moved customization to a method so we can share it with the CMSMigrationsDbContext class
-                b.ConfigureCustomUserProperties();
+                /* Configure mappings for your additional properties
+                 * Also see the CMSEfCoreEntityExtensionMappings class
+                 */
             });
 
             /* Configure your own tables/entities inside the ConfigureCMS method */

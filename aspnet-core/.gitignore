@@ -257,3 +257,4 @@ src/CMS.Web.Host/Logs/*
 src/CMS.IdentityServer/Logs/*
 src/CMS.HttpApi.Host/Logs/*
 src/CMS.HttpApi.Host/Logs/*
+src/CMS.DbMigrator/Logs/*

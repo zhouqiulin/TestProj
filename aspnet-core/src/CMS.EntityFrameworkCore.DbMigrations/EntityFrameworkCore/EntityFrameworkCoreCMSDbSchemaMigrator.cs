@@ -1,24 +1,35 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using CMS.Data;
 using Volo.Abp.DependencyInjection;
 
 namespace CMS.EntityFrameworkCore
 {
-    [Dependency(ReplaceServices = true)]
-    public class EntityFrameworkCoreCMSDbSchemaMigrator 
+    public class EntityFrameworkCoreCMSDbSchemaMigrator
         : ICMSDbSchemaMigrator, ITransientDependency
     {
-        private readonly CMSMigrationsDbContext _dbContext;
+        private readonly IServiceProvider _serviceProvider;
 
-        public EntityFrameworkCoreCMSDbSchemaMigrator(CMSMigrationsDbContext dbContext)
+        public EntityFrameworkCoreCMSDbSchemaMigrator(
+            IServiceProvider serviceProvider)
         {
-            _dbContext = dbContext;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task MigrateAsync()
         {
-            await _dbContext.Database.MigrateAsync();
+            /* We intentionally resolving the CMSMigrationsDbContext
+             * from IServiceProvider (instead of directly injecting it)
+             * to properly get the connection string of the current tenant in the
+             * current scope.
+             */
+
+            await _serviceProvider
+                .GetRequiredService<CMSMigrationsDbContext>()
+                .Database
+                .MigrateAsync();
         }
     }
 }

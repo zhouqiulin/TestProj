@@ -11,6 +11,8 @@ namespace CMS.EntityFrameworkCore
     {
         public CMSMigrationsDbContext CreateDbContext(string[] args)
         {
+            CMSEfCoreEntityExtensionMappings.Configure();
+
             var configuration = BuildConfiguration();
 
             var builder = new DbContextOptionsBuilder<CMSMigrationsDbContext>()
@@ -22,7 +24,7 @@ namespace CMS.EntityFrameworkCore
         private static IConfigurationRoot BuildConfiguration()
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../CMS.DbMigrator/"))
                 .AddJsonFile("appsettings.json", optional: false);
 
             return builder.Build();

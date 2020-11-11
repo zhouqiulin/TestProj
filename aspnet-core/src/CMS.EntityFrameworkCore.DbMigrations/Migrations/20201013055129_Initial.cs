@@ -13,7 +13,7 @@ namespace CMS.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ExtraProperties = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 40, nullable: true),
                     ApplicationName = table.Column<string>(maxLength: 96, nullable: true),
                     UserId = table.Column<Guid>(nullable: true),
                     UserName = table.Column<string>(maxLength: 256, nullable: true),
@@ -45,7 +45,7 @@ namespace CMS.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ExtraProperties = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 40, nullable: true),
                     JobName = table.Column<string>(maxLength: 128, nullable: false),
                     JobArgs = table.Column<string>(maxLength: 1048576, nullable: false),
                     TryCount = table.Column<short>(nullable: false, defaultValue: (short)0),
@@ -66,7 +66,7 @@ namespace CMS.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ExtraProperties = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(maxLength: 256, nullable: false),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 40, nullable: true),
                     Name = table.Column<string>(maxLength: 256, nullable: false),
                     Required = table.Column<bool>(nullable: false),
                     IsStatic = table.Column<bool>(nullable: false),
@@ -96,6 +96,51 @@ namespace CMS.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AbpLinkUsers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    SourceUserId = table.Column<Guid>(nullable: false),
+                    SourceTenantId = table.Column<Guid>(nullable: true),
+                    TargetUserId = table.Column<Guid>(nullable: false),
+                    TargetTenantId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpLinkUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AbpOrganizationUnits",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    ExtraProperties = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 40, nullable: true),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorId = table.Column<Guid>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierId = table.Column<Guid>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<Guid>(nullable: true),
+                    ParentId = table.Column<Guid>(nullable: true),
+                    Code = table.Column<string>(maxLength: 95, nullable: false),
+                    DisplayName = table.Column<string>(maxLength: 128, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpOrganizationUnits", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AbpOrganizationUnits_AbpOrganizationUnits_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "AbpOrganizationUnits",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AbpPermissionGrants",
                 columns: table => new
                 {
@@ -116,7 +161,7 @@ namespace CMS.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ExtraProperties = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(maxLength: 256, nullable: false),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 40, nullable: true),
                     TenantId = table.Column<Guid>(nullable: true),
                     Name = table.Column<string>(maxLength: 256, nullable: false),
                     NormalizedName = table.Column<string>(maxLength: 256, nullable: false),
@@ -127,6 +172,31 @@ namespace CMS.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AbpRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AbpSecurityLogs",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    ExtraProperties = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 40, nullable: true),
+                    TenantId = table.Column<Guid>(nullable: true),
+                    ApplicationName = table.Column<string>(maxLength: 96, nullable: true),
+                    Identity = table.Column<string>(maxLength: 96, nullable: true),
+                    Action = table.Column<string>(maxLength: 96, nullable: true),
+                    UserId = table.Column<Guid>(nullable: true),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    TenantName = table.Column<string>(maxLength: 64, nullable: true),
+                    ClientId = table.Column<string>(maxLength: 64, nullable: true),
+                    CorrelationId = table.Column<string>(maxLength: 64, nullable: true),
+                    ClientIpAddress = table.Column<string>(maxLength: 64, nullable: true),
+                    BrowserInfo = table.Column<string>(maxLength: 512, nullable: true),
+                    CreationTime = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpSecurityLogs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -150,7 +220,7 @@ namespace CMS.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ExtraProperties = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 40, nullable: true),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorId = table.Column<Guid>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -171,7 +241,7 @@ namespace CMS.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ExtraProperties = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 40, nullable: true),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorId = table.Column<Guid>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -184,11 +254,12 @@ namespace CMS.Migrations
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: false),
                     Name = table.Column<string>(maxLength: 64, nullable: true),
                     Surname = table.Column<string>(maxLength: 64, nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: false),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: false),
                     EmailConfirmed = table.Column<bool>(nullable: false, defaultValue: false),
                     PasswordHash = table.Column<string>(maxLength: 256, nullable: true),
                     SecurityStamp = table.Column<string>(maxLength: 256, nullable: false),
+                    IsExternal = table.Column<bool>(nullable: false, defaultValue: false),
                     PhoneNumber = table.Column<string>(maxLength: 16, nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(nullable: false, defaultValue: false),
                     TwoFactorEnabled = table.Column<bool>(nullable: false, defaultValue: false),
@@ -207,7 +278,7 @@ namespace CMS.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ExtraProperties = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 40, nullable: true),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorId = table.Column<Guid>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -232,7 +303,7 @@ namespace CMS.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ExtraProperties = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 40, nullable: true),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorId = table.Column<Guid>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -284,12 +355,33 @@ namespace CMS.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "IdentityServerDeviceFlowCodes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    ExtraProperties = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 40, nullable: true),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorId = table.Column<Guid>(nullable: true),
+                    DeviceCode = table.Column<string>(maxLength: 200, nullable: false),
+                    UserCode = table.Column<string>(maxLength: 200, nullable: false),
+                    SubjectId = table.Column<string>(maxLength: 200, nullable: true),
+                    ClientId = table.Column<string>(maxLength: 200, nullable: false),
+                    Expiration = table.Column<DateTime>(nullable: false),
+                    Data = table.Column<string>(maxLength: 50000, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IdentityServerDeviceFlowCodes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "IdentityServerIdentityResources",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ExtraProperties = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 40, nullable: true),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorId = table.Column<Guid>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -318,7 +410,7 @@ namespace CMS.Migrations
                     Key = table.Column<string>(maxLength: 200, nullable: false),
                     Id = table.Column<Guid>(nullable: false),
                     ExtraProperties = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 40, nullable: true),
                     Type = table.Column<string>(maxLength: 50, nullable: false),
                     SubjectId = table.Column<string>(maxLength: 200, nullable: true),
                     ClientId = table.Column<string>(maxLength: 200, nullable: false),
@@ -377,6 +469,33 @@ namespace CMS.Migrations
                         name: "FK_AbpEntityChanges_AbpAuditLogs_AuditLogId",
                         column: x => x.AuditLogId,
                         principalTable: "AbpAuditLogs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AbpOrganizationUnitRoles",
+                columns: table => new
+                {
+                    RoleId = table.Column<Guid>(nullable: false),
+                    OrganizationUnitId = table.Column<Guid>(nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorId = table.Column<Guid>(nullable: true),
+                    TenantId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpOrganizationUnitRoles", x => new { x.OrganizationUnitId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AbpOrganizationUnitRoles_AbpOrganizationUnits_OrganizationUnitId",
+                        column: x => x.OrganizationUnitId,
+                        principalTable: "AbpOrganizationUnits",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AbpOrganizationUnitRoles_AbpRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AbpRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -457,6 +576,33 @@ namespace CMS.Migrations
                     table.PrimaryKey("PK_AbpUserLogins", x => new { x.UserId, x.LoginProvider });
                     table.ForeignKey(
                         name: "FK_AbpUserLogins_AbpUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AbpUserOrganizationUnits",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(nullable: false),
+                    OrganizationUnitId = table.Column<Guid>(nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorId = table.Column<Guid>(nullable: true),
+                    TenantId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpUserOrganizationUnits", x => new { x.OrganizationUnitId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_AbpUserOrganizationUnits_AbpOrganizationUnits_OrganizationUnitId",
+                        column: x => x.OrganizationUnitId,
+                        principalTable: "AbpOrganizationUnits",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AbpUserOrganizationUnits_AbpUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
@@ -844,6 +990,28 @@ namespace CMS.Migrations
                 columns: new[] { "Name", "ProviderName", "ProviderKey" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AbpLinkUsers_SourceUserId_SourceTenantId_TargetUserId_TargetTenantId",
+                table: "AbpLinkUsers",
+                columns: new[] { "SourceUserId", "SourceTenantId", "TargetUserId", "TargetTenantId" },
+                unique: true,
+                filter: "[SourceTenantId] IS NOT NULL AND [TargetTenantId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpOrganizationUnitRoles_RoleId_OrganizationUnitId",
+                table: "AbpOrganizationUnitRoles",
+                columns: new[] { "RoleId", "OrganizationUnitId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpOrganizationUnits_Code",
+                table: "AbpOrganizationUnits",
+                column: "Code");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpOrganizationUnits_ParentId",
+                table: "AbpOrganizationUnits",
+                column: "ParentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AbpPermissionGrants_Name_ProviderName_ProviderKey",
                 table: "AbpPermissionGrants",
                 columns: new[] { "Name", "ProviderName", "ProviderKey" });
@@ -857,6 +1025,26 @@ namespace CMS.Migrations
                 name: "IX_AbpRoles_NormalizedName",
                 table: "AbpRoles",
                 column: "NormalizedName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpSecurityLogs_TenantId_Action",
+                table: "AbpSecurityLogs",
+                columns: new[] { "TenantId", "Action" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpSecurityLogs_TenantId_ApplicationName",
+                table: "AbpSecurityLogs",
+                columns: new[] { "TenantId", "ApplicationName" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpSecurityLogs_TenantId_Identity",
+                table: "AbpSecurityLogs",
+                columns: new[] { "TenantId", "Identity" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpSecurityLogs_TenantId_UserId",
+                table: "AbpSecurityLogs",
+                columns: new[] { "TenantId", "UserId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AbpSettings_Name_ProviderName_ProviderKey",
@@ -877,6 +1065,11 @@ namespace CMS.Migrations
                 name: "IX_AbpUserLogins_LoginProvider_ProviderKey",
                 table: "AbpUserLogins",
                 columns: new[] { "LoginProvider", "ProviderKey" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpUserOrganizationUnits_UserId_OrganizationUnitId",
+                table: "AbpUserOrganizationUnits",
+                columns: new[] { "UserId", "OrganizationUnitId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AbpUserRoles_RoleId_UserId",
@@ -909,6 +1102,23 @@ namespace CMS.Migrations
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_IdentityServerDeviceFlowCodes_DeviceCode",
+                table: "IdentityServerDeviceFlowCodes",
+                column: "DeviceCode",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IdentityServerDeviceFlowCodes_Expiration",
+                table: "IdentityServerDeviceFlowCodes",
+                column: "Expiration");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IdentityServerDeviceFlowCodes_UserCode",
+                table: "IdentityServerDeviceFlowCodes",
+                column: "UserCode",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_IdentityServerPersistedGrants_Expiration",
                 table: "IdentityServerPersistedGrants",
                 column: "Expiration");
@@ -937,10 +1147,19 @@ namespace CMS.Migrations
                 name: "AbpFeatureValues");
 
             migrationBuilder.DropTable(
+                name: "AbpLinkUsers");
+
+            migrationBuilder.DropTable(
+                name: "AbpOrganizationUnitRoles");
+
+            migrationBuilder.DropTable(
                 name: "AbpPermissionGrants");
 
             migrationBuilder.DropTable(
                 name: "AbpRoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "AbpSecurityLogs");
 
             migrationBuilder.DropTable(
                 name: "AbpSettings");
@@ -953,6 +1172,9 @@ namespace CMS.Migrations
 
             migrationBuilder.DropTable(
                 name: "AbpUserLogins");
+
+            migrationBuilder.DropTable(
+                name: "AbpUserOrganizationUnits");
 
             migrationBuilder.DropTable(
                 name: "AbpUserRoles");
@@ -997,6 +1219,9 @@ namespace CMS.Migrations
                 name: "IdentityServerClientSecrets");
 
             migrationBuilder.DropTable(
+                name: "IdentityServerDeviceFlowCodes");
+
+            migrationBuilder.DropTable(
                 name: "IdentityServerIdentityClaims");
 
             migrationBuilder.DropTable(
@@ -1007,6 +1232,9 @@ namespace CMS.Migrations
 
             migrationBuilder.DropTable(
                 name: "AbpTenants");
+
+            migrationBuilder.DropTable(
+                name: "AbpOrganizationUnits");
 
             migrationBuilder.DropTable(
                 name: "AbpRoles");
