@@ -1,11 +1,11 @@
 {
   "/api": {
-    "target": "http://cmsapi.zql.me/",
+    "target": "https://localhost:44336/",
     "secure": false,
     "changeOrigin": true
   },
   "/UploadFiles": {
-    "target": "http://cmsapi.zql.me/",
+    "target": "https://localhost:44336/",
     "secure": false,
     "changeOrigin": true
   }

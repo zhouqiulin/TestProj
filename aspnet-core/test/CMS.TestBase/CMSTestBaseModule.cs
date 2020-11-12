@@ -7,6 +7,8 @@ using Volo.Abp.Data;
 using Volo.Abp.IdentityServer;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
+using System;
+
 
 namespace CMS
 {
@@ -27,7 +29,7 @@ namespace CMS
 
             PreConfigure<IIdentityServerBuilder>(identityServerBuilder =>
             {
-                identityServerBuilder.AddDeveloperSigningCredential(false, System.Guid.NewGuid().ToString());
+                identityServerBuilder.AddDeveloperSigningCredential(false, Guid.NewGuid().ToString());
             });
         }
 
