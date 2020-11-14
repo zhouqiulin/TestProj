@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 import { Observer, Observable } from 'rxjs';
 import {
   SettingsService,
   ImageForUse,
 } from '../core/settings/settings.service';
+import * as Model from '../models/models';
 
 export interface ITreeNode {
   key: number;
@@ -124,16 +126,43 @@ export class CommonService {
     const ids = list.map((ele) => ele.id);
 
     list.forEach((ele) => {
-      (ele.key = ele.id),
-        (ele.children = list.filter((item) => ele.id === item.parentId));
+      ele.key = ele.id;
+      ele.children = list.filter((item) => ele.id === item.parentId);
     });
 
     list = list.filter((ele) => {
       return !ids.includes(ele.parentId);
     });
 
-    debugger;
-
     return list;
+  }
+
+  getTreeSelectorData(list: Model.TreeDto[]): NzTreeNodeOptions[] {
+    let tree: NzTreeNodeOptions[];
+
+    const ids = list.map((ele) => ele.id);
+
+    tree = list.map((ele) => {
+      return {
+        key: ele.id,
+        title: ele.name,
+        id: ele.id,
+        parentId: ele.parentId,
+      };
+    });
+
+    tree.forEach((ele) => {
+      ele.children = tree.filter((item) => ele.id === item.parentId);
+      if (ele.children.length === 0) {
+        delete ele.children;
+        ele.isLeaf = true;
+      }
+    });
+
+    tree = tree.filter((ele) => {
+      return !ids.includes(ele.parentId);
+    });
+
+    return tree;
   }
 }

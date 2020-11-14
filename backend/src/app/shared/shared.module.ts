@@ -53,6 +53,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { CommonService } from '../services/common.service';
+import { DataService } from '../services/data.service';
 
 const ZorroModules = [
   NzGridModule,
@@ -99,7 +100,7 @@ const ZorroModules = [
     ...ZorroModules,
     EditorModule,
   ],
-  providers: [ColorsService, CommonService],
+  providers: [ColorsService, CommonService, DataService],
   declarations: [
     FlotDirective,
     SparklineDirective,

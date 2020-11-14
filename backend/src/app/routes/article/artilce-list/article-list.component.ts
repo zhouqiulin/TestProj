@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { ArticleService } from '../../../services/article.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { DataService } from 'src/app/services/data.service';
+import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-articles-list',
@@ -16,7 +19,9 @@ export class ArticleListComponent implements OnInit {
     private route: Router,
     private articlesSerive: ArticleService,
     private modal: NzModalService,
-    private msg: NzMessageService
+    private msg: NzMessageService,
+    private dataService: DataService,
+    private commonService: CommonService
   ) {}
 
   treeId = '';
@@ -34,30 +39,16 @@ export class ArticleListComponent implements OnInit {
   pageSize = 10;
   expandKeys = ['100', '1001'];
   value: string;
-  nodes = [
-    {
-      title: 'parent 1',
-      key: '100',
-      children: [
-        {
-          title: 'parent 1-0',
-          key: '1001',
-          children: [
-            { title: 'leaf 1-0-0', key: '10010', isLeaf: true },
-            { title: 'leaf 1-0-1', key: '10011', isLeaf: true },
-          ],
-        },
-        {
-          title: 'parent 1-1',
-          key: '1002',
-          children: [{ title: 'leaf 1-1-0', key: '10020', isLeaf: true }],
-        },
-      ],
-    },
-  ];
+  nodes: NzTreeNodeOptions[];
 
   addArticle(): void {
     this.route.navigate(['/articles/details']);
+  }
+
+  setTreeSelector(): void {
+    this.dataService.getTreeList('', 'Article').subscribe((res) => {
+      this.nodes = this.commonService.getTreeSelectorData(res.items);
+    });
   }
 
   getData() {
@@ -105,5 +96,6 @@ export class ArticleListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData();
+    this.setTreeSelector();
   }
 }
