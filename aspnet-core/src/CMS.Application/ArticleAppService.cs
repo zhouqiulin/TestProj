@@ -7,17 +7,20 @@ using Volo.Abp.Domain.Repositories;
 using CMS.Articles;
 using System.Threading.Tasks;
 using System.Linq;
+using CMS.Trees;
 
 namespace CMS
 {
     public class ArticleAppService: CrudAppService<Article,ArticleDto,Guid, GetArticleListInputDto, CreateUpdateArticleDto, CreateUpdateArticleDto>, IArticleAppService
     {
-        private readonly IRepository<Article, Guid> _repository;
         private readonly IArticleRepository _articleRepository;
-        public ArticleAppService(IRepository<Article, Guid> repository,IArticleRepository articleRepository) : base(repository)
+        private readonly ITreeRepository _treeRepository;
+
+        public ArticleAppService(IArticleRepository articleRepository, ITreeRepository treeRepository) : base(articleRepository)
         {
-            _repository = repository;
             _articleRepository = articleRepository;
+            _treeRepository = treeRepository;
+
         }
 
         public async Task<IList<ArticleDto>> UpdateRange(IList<CreateUpdateArticleDto<Guid>> updateDtos)
@@ -38,7 +41,15 @@ namespace CMS
         }
         protected override IQueryable<Article> CreateFilteredQuery(GetArticleListInputDto input)
         {
-            return _repository.Where(o => o.Title.Contains(input.Title) || input.Title.IsNullOrWhiteSpace());
+            var nodes = _treeRepository.findChildNode(input.TreeId);
+
+            if (input.TreeId != null)
+            {
+                nodes.Add((Guid)input.TreeId);
+            }
+            
+
+            return _articleRepository.Where(o => o.Title.Contains(input.Title) || input.Title.IsNullOrWhiteSpace()).Where(o =>nodes.Contains(o.TreeId));
 
         }
      

@@ -8,5 +8,7 @@ namespace CMS.Articles
     public class GetArticleListInputDto : PagedAndSortedResultRequestDto
     {
         public string Title { get; set; }
+
+        public Guid? TreeId { get; set; }
     }
 }
