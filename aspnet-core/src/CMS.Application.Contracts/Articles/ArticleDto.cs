@@ -10,7 +10,7 @@ namespace CMS.Articles
 
         public string Title { get; set; }
 
-        public Guid TypeId { get; set; }
+        public Guid TreeId { get; set; }
 
         public string From { get; set; }
 

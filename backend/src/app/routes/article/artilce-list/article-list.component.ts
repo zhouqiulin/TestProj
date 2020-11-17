@@ -27,11 +27,11 @@ export class ArticleListComponent implements OnInit {
   treeId = '';
   title = '';
 
-  searchTreeId: string;
-  searchTitle: string;
+  searchTreeId = '';
+  searchTitle = '';
 
   totalCount = 0;
-  list: any[];
+  list = [];
 
   loading = true;
 
@@ -39,7 +39,8 @@ export class ArticleListComponent implements OnInit {
   pageSize = 10;
   expandKeys = ['100', '1001'];
   value: string;
-  nodes: NzTreeNodeOptions[];
+  nodes: NzTreeNodeOptions[] = [];
+  treeList = [];
 
   addArticle(): void {
     this.route.navigate(['/articles/details']);
@@ -47,34 +48,53 @@ export class ArticleListComponent implements OnInit {
 
   setTreeSelector(): void {
     this.dataService.getTreeList('', 'Article').subscribe((res) => {
+      this.treeList = res.items;
       this.nodes = this.commonService.getTreeSelectorData(res.items);
+      this.getData();
     });
   }
 
-  getData() {
+  getData(): void {
     this.loading = true;
-    this.articlesSerive
-      .getArticleList(this.pageIndex, this.pageSize, this.title, '')
-      .subscribe((res) => {
-        this.list = res.items;
-        this.totalCount = res.totalCount;
-        this.loading = false;
-      });
+
+    this.dataService
+      .getArticleList(
+        this.searchTitle,
+        this.treeId,
+        this.pageIndex,
+        this.pageSize
+      )
+      .subscribe(
+        (res) => {
+          this.list = res.items;
+          this.list.forEach((ele) => {
+            ele.fullTreeName = this.commonService.getFullTreeName(
+              ele.treeId,
+              this.treeList
+            );
+          });
+          this.totalCount = res.totalCount;
+          this.loading = false;
+        },
+        (err) => {
+          this.loading = false;
+        }
+      );
   }
-  searchData() {
+  searchData(): void {
     this.pageIndex = 1;
-    this.searchTreeId = this.treeId;
+    this.searchTreeId = this.treeId ? this.treeId : '';
     this.searchTitle = this.title;
     this.getData();
   }
-  edit(data) {
+  edit(data): void {
     this.route.navigate(['/articles/details'], {
       queryParams: {
         id: data.id,
       },
     });
   }
-  delete(data) {
+  delete(data): void {
     this.modal.confirm({
       nzTitle: '确定删除?',
       nzContent: '<b style="color: red;">删除后无法再恢复！</b>',
@@ -95,7 +115,6 @@ export class ArticleListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getData();
     this.setTreeSelector();
   }
 }

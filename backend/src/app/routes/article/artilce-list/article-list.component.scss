@@ -1,19 +1,24 @@
-.card-header{
-    padding-top: 15px;
-    padding-bottom: 0;
+.card-header {
+  padding-top: 15px;
+  padding-bottom: 0;
 
-    .options{
-        float: left;
-        button{
-            margin-right: 10px;
-        }
+  .options {
+    float: left;
+    button {
+      margin-right: 10px;
     }
-    .search{
-        float: right;
-        nz-input-group{
-            width: 300px;
-            margin-left: 10px;
-        }
+  }
+  .search {
+    float: right;
+    nz-input-group {
+      width: 300px;
+      margin-left: 10px;
+      margin-right: 10px;
     }
+  }
 }
 
+.cur-tree-name {
+  color: red;
+  font-weight: bold;
+}

@@ -1,3 +1,6 @@
+<!--
+ * @LastEditTime: 2020-11-17 22:28:18
+-->
 <div class="content-heading">
   <div>资讯列表
     <small></small>
@@ -17,9 +20,8 @@
         <input type="text" nz-input placeholder="标题" [(ngModel)]="title" />
       </nz-input-group>
       <ng-template #suffixIconButton>
-        <button nz-button nzType="primary" nzSearch (click)="searchData()"><i nz-icon nzType="search"></i></button>
+        <button nz-button nzType="primary" nzSearch (click)="searchData()" class="cms-mr10"><i nz-icon nzType="search"></i></button>
       </ng-template>
-
     </div>
 
   </div>
@@ -30,15 +32,22 @@
       (nzPageIndexChange)="getData()" (nzPageSizeChange)="getData()">
       <thead>
         <tr>
-          <th>标题</th>
-          <th>描述</th>
-          <th>创建时间</th>
-          <th>操作</th>
+          <th width="20%">标题</th>
+          <th width="15%">分类</th>
+          <th width="35%">描述</th>
+          <th width="10%">创建时间</th>
+          <th width="20%">操作</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let data of table.data">
           <td>{{ data.title }}</td>
+          <td>
+            <span *ngIf="data.fullTreeName.parentNameList.length>0">{{data.fullTreeName.parentNameList.join('/')}}/</span>
+            <span [ngClass]="{'cur-tree-name': searchTreeId}">{{data.fullTreeName.selfName}}</span>
+            <span *ngIf="data.fullTreeName.childrenNameList.length>0">/{{data.fullTreeName.childrenNameList.join('/')}}</span>
+
+          </td>
           <td>{{ data.description }}</td>
           <td>{{ data.creationTime|date:'yyyy-MM-dd HH:mm:ss' }}</td>
           <td>

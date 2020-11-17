@@ -165,4 +165,48 @@ export class CommonService {
 
     return tree;
   }
+
+  getFullTreeName(
+    treeId: string,
+    list: Model.TreeDto[]
+  ): {
+    parentNameList: string[];
+    selfName: string;
+    childrenNameList: string[];
+  } {
+    const parentNameList: string[] = [];
+    let selfName = '';
+    const childrenNameList: string[] = [];
+
+    const selfNode: Model.TreeDto = list.filter((ele) => {
+      return ele.id === treeId;
+    })[0];
+    selfName = selfNode.name;
+
+    const findParentNameList = (node: Model.TreeDto) => {
+      list.forEach((ele) => {
+        if (ele.id === node.parentId) {
+          parentNameList.unshift(ele.name);
+          findParentNameList(ele);
+        }
+      });
+    };
+    const findChildrenNameList = (node: Model.TreeDto) => {
+      list.forEach((ele) => {
+        if (ele.parentId === node.id) {
+          childrenNameList.push(ele.name);
+          findChildrenNameList(ele);
+        }
+      });
+    };
+
+    findParentNameList(selfNode);
+    findChildrenNameList(selfNode);
+
+    return {
+      parentNameList,
+      selfName,
+      childrenNameList,
+    };
+  }
 }
