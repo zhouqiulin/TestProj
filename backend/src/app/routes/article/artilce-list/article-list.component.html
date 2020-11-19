@@ -1,5 +1,5 @@
 <!--
- * @LastEditTime: 2020-11-17 22:28:18
+ * @LastEditTime: 2020-11-19 21:32:51
 -->
 <div class="content-heading">
   <div>资讯列表
@@ -40,20 +40,26 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let data of table.data">
-          <td>{{ data.title }}</td>
+        <tr *ngFor="let row of table.data">
           <td>
-            <span *ngIf="data.fullTreeName.parentNameList.length>0">{{data.fullTreeName.parentNameList.join('/')}}/</span>
-            <span [ngClass]="{'cur-tree-name': searchTreeId}">{{data.fullTreeName.selfName}}</span>
-            <span *ngIf="data.fullTreeName.childrenNameList.length>0">/{{data.fullTreeName.childrenNameList.join('/')}}</span>
-
+            <span nz-typography>
+              <a href="" (click)="edit(row)" >
+              {{row.title}}
+              <Link />
+              </a>
+            </span>
+          
           </td>
-          <td>{{ data.description }}</td>
-          <td>{{ data.creationTime|date:'yyyy-MM-dd HH:mm:ss' }}</td>
           <td>
-            <button class="mr10" nz-button nzSize="small" nzType="primary" (click)="edit(data)"><i nz-icon
+            <span *ngIf="row.nodePath.parentNameList.length>0">{{row.nodePath.parentNameList.join('/')}}/</span>
+            <span >{{row.nodePath.selfName}}</span>
+          </td>
+          <td>{{ row.description }}</td>
+          <td>{{ row.creationTime|date:'yyyy-MM-dd HH:mm:ss' }}</td>
+          <td>
+            <button class="mr10" nz-button nzSize="small" nzType="primary" (click)="edit(row)"><i nz-icon
                 nzType="edit"></i>编辑</button>
-            <button nz-button nzSize="small" nzType="danger" (click)="delete(data)"><i nz-icon
+            <button nz-button nzSize="small" nzType="danger" (click)="delete(row)"><i nz-icon
                 nzType="delete"></i>删除</button>
           </td>
         </tr>

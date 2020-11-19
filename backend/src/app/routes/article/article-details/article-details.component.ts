@@ -6,48 +6,9 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable, Observer } from 'rxjs';
 import { SettingsService } from 'src/app/core/settings/settings.service';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
-
-const options = [
-  {
-    value: 'zhejiang',
-    label: 'Zhejiang',
-    children: [
-      {
-        value: 'hangzhou',
-        label: 'Hangzhou',
-        children: [
-          {
-            value: 'xihu',
-            label: 'West Lake',
-            isLeaf: true,
-          },
-        ],
-      },
-      {
-        value: 'ningbo',
-        label: 'Ningbo',
-        isLeaf: true,
-      },
-    ],
-  },
-  {
-    value: 'jiangsu',
-    label: 'Jiangsu',
-    children: [
-      {
-        value: 'nanjing',
-        label: 'Nanjing',
-        children: [
-          {
-            value: 'zhonghuamen',
-            label: 'Zhong Hua Men',
-            isLeaf: true,
-          },
-        ],
-      },
-    ],
-  },
-];
+import { DataService } from 'src/app/services/data.service';
+import * as Model from '../../..';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-details',
@@ -57,28 +18,36 @@ const options = [
 export class ArticleDetailsComponent implements OnInit {
   pageTitle: string;
   id: string;
-  articleForm: FormGroup;
-  treeOptons = options;
+  treeOptons = [];
   loading = false;
-  coverUrl: string;
+  coverUrlBase64: string;
   uploadFileUrl = '/api/app/file/uploadFile';
   showMore = false;
   uploadFile: NzUploadFile;
   editorConfig = this.settings.getEditorSetting();
   dataLoading = false;
+  selectedTreeIds = [];
+
+  model = {
+    title: '',
+    description: '',
+    treeId: '',
+    coverUrl: '',
+    keywords: '',
+    from: '',
+    content: '',
+  };
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private settings: SettingsService,
     private fb: FormBuilder,
     private articlesSerive: ArticleService,
-    private msg: NzMessageService
+    private msg: NzMessageService,
+    private dataService: DataService,
+    private commonService: CommonService
   ) {}
-
-  toggleMore() {
-    this.showMore = !this.showMore;
-    return false;
-  }
 
   beforeUpload = (file: File) => {
     return new Observable((observer: Observer<boolean>) => {
@@ -127,6 +96,19 @@ export class ArticleDetailsComponent implements OnInit {
     });
   }
 
+  private setCascaderData(treeId?): void {
+    this.dataService.getTreeList('', 'Article').subscribe((res) => {
+      this.treeOptons = this.commonService.getCascaderData(res.items);
+      if (treeId) {
+        this.selectedTreeIds = this.commonService.getNodePath(
+          treeId,
+          res.items
+        ).parentIdList;
+        this.selectedTreeIds.push(treeId);
+      }
+    });
+  }
+
   handleChange(info: { file: NzUploadFile }): void {
     switch (info.file.status) {
       case 'uploading':
@@ -136,11 +118,9 @@ export class ArticleDetailsComponent implements OnInit {
         // Get this url from response in real world.
         this.getBase64(info.file!.originFileObj!, (img: string) => {
           this.loading = false;
-          this.coverUrl = img;
+          this.coverUrlBase64 = img;
         });
-        this.articleForm.patchValue({
-          coverUrl: info.file.response.path,
-        });
+        this.model.coverUrl = info.file.response.path;
         break;
       case 'error':
         this.msg.error('Network error');
@@ -149,40 +129,28 @@ export class ArticleDetailsComponent implements OnInit {
     }
   }
 
-  submitForm() {
-    for (const i in this.articleForm.controls) {
-      this.articleForm.controls[i].markAsDirty();
-      this.articleForm.controls[i].updateValueAndValidity();
+  treeChange(val: any[]): void {
+    this.model.treeId = val[val.length - 1];
+  }
+
+  submitForm({ value, valid }): void {
+    if (!valid) {
+      return;
     }
-    if (this.articleForm.status === 'VALID') {
-      if (this.id) {
-        this.articlesSerive
-          .putArticle(this.id, this.articleForm.value)
-          .subscribe((res) => {
-            this.msg.success('修改成功');
-          });
-      } else {
-        this.articlesSerive
-          .addArticle(this.articleForm.value)
-          .subscribe((res) => {
-            this.msg.success('添加成功');
-            this.router.navigate(['/articles/list']);
-          });
-      }
+
+    if (this.id) {
+      this.articlesSerive.putArticle(this.id, this.model).subscribe((res) => {
+        this.msg.success('修改成功');
+      });
+    } else {
+      this.articlesSerive.addArticle(this.model).subscribe((res) => {
+        this.msg.success('添加成功');
+        this.router.navigate(['/articles/list']);
+      });
     }
   }
 
   ngOnInit(): void {
-    this.articleForm = this.fb.group({
-      title: [null, [Validators.required]],
-      description: [null, [Validators.required]],
-      treeId: [null, [Validators.required]],
-      coverUrl: [null],
-      keywords: [null],
-      from: [null],
-      content: [null],
-    });
-
     this.activatedRoute.queryParams.subscribe((queyParams) => {
       this.id = queyParams.id;
       if (this.id) {
@@ -190,19 +158,19 @@ export class ArticleDetailsComponent implements OnInit {
         this.dataLoading = true;
         this.articlesSerive.getArticle(queyParams.id).subscribe((res) => {
           this.dataLoading = false;
-          this.articleForm.setValue({
-            title: res.title,
-            description: res.description,
-            treeId: '22',
-            coverUrl: res.coverUrl,
-            keywords: '22',
-            from: res.from,
-            content: res.content,
-          });
-          this.coverUrl = res.coverUrl;
+          this.model.title = res.title;
+          this.model.description = res.description;
+          this.model.treeId = res.treeId;
+          this.model.coverUrl = res.coverUrl;
+          this.model.keywords = res.keywords;
+          this.model.from = res.from;
+          this.model.content = res.content;
+
+          this.setCascaderData(this.model.treeId);
         });
       } else {
         this.pageTitle = '新增资讯';
+        this.setCascaderData();
       }
     });
   }

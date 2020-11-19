@@ -68,7 +68,7 @@ export class ArticleListComponent implements OnInit {
         (res) => {
           this.list = res.items;
           this.list.forEach((ele) => {
-            ele.fullTreeName = this.commonService.getFullTreeName(
+            ele.nodePath = this.commonService.getNodePath(
               ele.treeId,
               this.treeList
             );
@@ -87,10 +87,10 @@ export class ArticleListComponent implements OnInit {
     this.searchTitle = this.title;
     this.getData();
   }
-  edit(data): void {
+  edit(row): void {
     this.route.navigate(['/articles/details'], {
       queryParams: {
-        id: data.id,
+        id: row.id,
       },
     });
   }

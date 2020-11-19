@@ -165,18 +165,48 @@ export class CommonService {
 
     return tree;
   }
+  getCascaderData(list: Model.TreeDto[]): object[] {
+    let cascaderData: any[];
 
-  getFullTreeName(
+    const ids = list.map((ele) => ele.id);
+
+    cascaderData = list.map((ele) => {
+      return {
+        id: ele.id,
+        value: ele.id,
+        label: ele.name,
+        parentId: ele.parentId,
+      };
+    });
+
+    cascaderData.forEach((ele) => {
+      ele.children = cascaderData.filter((item) => ele.id === item.parentId);
+      if (ele.children.length === 0) {
+        delete ele.children;
+        ele.isLeaf = true;
+      }
+    });
+
+    cascaderData = cascaderData.filter((ele) => {
+      return !ids.includes(ele.parentId);
+    });
+
+    return cascaderData;
+  }
+
+  // 获取节点信息
+  getNodePath(
     treeId: string,
     list: Model.TreeDto[]
   ): {
     parentNameList: string[];
+    parentIdList: string[];
     selfName: string;
-    childrenNameList: string[];
   } {
     const parentNameList: string[] = [];
+    const parentIdList: string[] = [];
+
     let selfName = '';
-    const childrenNameList: string[] = [];
 
     const selfNode: Model.TreeDto = list.filter((ele) => {
       return ele.id === treeId;
@@ -187,26 +217,18 @@ export class CommonService {
       list.forEach((ele) => {
         if (ele.id === node.parentId) {
           parentNameList.unshift(ele.name);
+          parentIdList.unshift(ele.id);
           findParentNameList(ele);
-        }
-      });
-    };
-    const findChildrenNameList = (node: Model.TreeDto) => {
-      list.forEach((ele) => {
-        if (ele.parentId === node.id) {
-          childrenNameList.push(ele.name);
-          findChildrenNameList(ele);
         }
       });
     };
 
     findParentNameList(selfNode);
-    findChildrenNameList(selfNode);
 
     return {
       parentNameList,
+      parentIdList,
       selfName,
-      childrenNameList,
     };
   }
 }

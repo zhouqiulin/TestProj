@@ -12,7 +12,7 @@ namespace CMS
         public string Title { get; set; }
 
         [Required]
-        public Guid Type { get; set; }
+        public Guid TreeId { get; set; }
 
         [StringLength(64)]
         public string From { get; set; }
@@ -21,7 +21,11 @@ namespace CMS
         [StringLength(128)]
         public string CoverUrl { get; set; }
 
-        [Required]
+      
+        [StringLength(128)]
+        public string Keywords { get; set; }
+
+       
         [StringLength(128)]
         public string Description { get; set; }
 
