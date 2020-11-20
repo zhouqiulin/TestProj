@@ -1,5 +1,5 @@
 <!--
- * @LastEditTime: 2020-11-19 21:32:51
+ * @LastEditTime: 2020-11-20 21:23:26
 -->
 <div class="content-heading">
   <div>资讯列表
@@ -13,7 +13,7 @@
       <button nz-button nzType="primary" (click)="addArticle()"><i nz-icon nzType="plus"></i>添加</button>
     </div>
     <div class="search">
-      <nz-tree-select style="width: 250px" [nzExpandedKeys]="expandKeys" [nzNodes]="nodes" nzShowSearch
+      <nz-tree-select style="width: 250px" [nzExpandedKeys]="expandKeys" [nzNodes]="nodes" nzShowSearch  (ngModelChange)="onChange($event)"
         nzPlaceHolder="选择类别" [(ngModel)]="treeId">
       </nz-tree-select>
       <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">

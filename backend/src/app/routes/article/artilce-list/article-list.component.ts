@@ -60,7 +60,7 @@ export class ArticleListComponent implements OnInit {
     this.dataService
       .getArticleList(
         this.searchTitle,
-        this.treeId,
+        this.searchTreeId,
         this.pageIndex,
         this.pageSize
       )
@@ -83,7 +83,6 @@ export class ArticleListComponent implements OnInit {
   }
   searchData(): void {
     this.pageIndex = 1;
-    this.searchTreeId = this.treeId ? this.treeId : '';
     this.searchTitle = this.title;
     this.getData();
   }
@@ -110,8 +109,9 @@ export class ArticleListComponent implements OnInit {
     this.articlesSerive.deleteArticle(data.id);
   }
 
-  onChange($event: string): void {
-    console.log($event);
+  onChange(key: string): void {
+    this.searchTreeId = key || '';
+    this.searchData();
   }
 
   ngOnInit(): void {
