@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { ProductsService } from '../../../services/products.service';
+import { ProductService } from '../../../services/product.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 
@@ -14,7 +14,7 @@ export class ListComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private route: Router,
-    private productsService: ProductsService,
+    private productsService: ProductService,
     private modal: NzModalService,
     private msg: NzMessageService
   ) {}

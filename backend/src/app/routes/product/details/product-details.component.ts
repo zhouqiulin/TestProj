@@ -1,74 +1,45 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductsService } from '../../../services/products.service';
+import { ProductService } from '../../../services/product.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Observable, Observer } from 'rxjs';
 import {
   SettingsService,
   ImageForUse,
 } from 'src/app/core/settings/settings.service';
 import { CommonService } from 'src/app/services/common.service';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
-
-const options = [
-  {
-    value: 'zhejiang',
-    label: 'Zhejiang',
-    children: [
-      {
-        value: 'hangzhou',
-        label: 'Hangzhou',
-        children: [
-          {
-            value: 'xihu',
-            label: 'West Lake',
-            isLeaf: true,
-          },
-        ],
-      },
-      {
-        value: 'ningbo',
-        label: 'Ningbo',
-        isLeaf: true,
-      },
-    ],
-  },
-  {
-    value: 'jiangsu',
-    label: 'Jiangsu',
-    children: [
-      {
-        value: 'nanjing',
-        label: 'Nanjing',
-        children: [
-          {
-            value: 'zhonghuamen',
-            label: 'Zhong Hua Men',
-            isLeaf: true,
-          },
-        ],
-      },
-    ],
-  },
-];
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
-  selector: 'app-details',
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss'],
+  selector: 'app-product-details',
+  templateUrl: './product-details.component.html',
+  styleUrls: ['./product-details.component.scss'],
 })
 export class DetailsComponent implements OnInit {
   pageTitle: string;
   id: string;
 
   // loading
-  dataLoading = false;
+  pageLoading = false;
   productForm: FormGroup;
-  treeOptons = options;
+  treeOptons = [];
 
   mainImageUrl: NzUploadFile[] = [];
   otherImageUrl: NzUploadFile[] = [];
+
+  selectedTreeIds = [];
+
+  model = {
+    name: '',
+    title: '',
+    description: '',
+    treeId: '',
+    mainImageUrl: '',
+    otherImageUrl: '',
+    keywords: '',
+    content: '',
+  };
 
   uploadFileUrl = '/api/app/file/uploadFile';
   showMore = false;
@@ -82,37 +53,52 @@ export class DetailsComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private settings: SettingsService,
     private fb: FormBuilder,
-    private productssSerive: ProductsService,
+    private productSerive: ProductService,
     private msg: NzMessageService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private dataService: DataService
   ) {}
 
   beforeUploadMainImage = (file: File) => {
     return this.commonService.checkImage(file, ImageForUse.ProductMainImage);
   };
+
   beforeUploadOtherImage = (file: File) => {
     return this.commonService.checkImage(file, ImageForUse.ProductOtherImage);
   };
+
   removeMainImageUrl = (file: NzUploadFile) => {
-    this.productForm.patchValue({
-      mainImageUrl: this.mainImageUrl
-        .map((ele) => ele.url || ele.response.path)
-        .join(','),
-    });
+    this.model.mainImageUrl = this.mainImageUrl
+      .map((ele) => ele.url || ele.response.path)
+      .join(',');
     return true;
   };
   removeOtherImageUrl = (file: NzUploadFile) => {
-    this.productForm.patchValue({
-      otherImageUrl: this.otherImageUrl
-        .map((ele) => ele.url || ele.response.path)
-        .join(','),
-    });
+    this.model.otherImageUrl = this.otherImageUrl
+      .map((ele) => ele.url || ele.response.path)
+      .join(',');
     return true;
   };
   handlePreview = (file: NzUploadFile) => {
     this.previewImageUrl = file.url;
     this.previewImageVisivle = true;
   };
+
+  private _setCascaderData(treeId?): void {
+    this.dataService.getTreeList('', 'Product').subscribe((res) => {
+      this.treeOptons = this.commonService.getCascaderData(res.items);
+      if (treeId) {
+        this.selectedTreeIds = this.commonService.getNodePath(
+          treeId,
+          res.items
+        ).parentIdList;
+        this.selectedTreeIds.push(treeId);
+      }
+    });
+  }
+  treeChange(val: any[]): void {
+    this.model.treeId = val[val.length - 1];
+  }
 
   handleChange(
     info: { file: NzUploadFile; fileList: NzUploadFile[] },
@@ -123,11 +109,9 @@ export class DetailsComponent implements OnInit {
         break;
       case 'done':
         // Get this url from response in real world.
-        this.productForm.patchValue({
-          [type]: info.fileList
-            .map((ele) => ele.url || ele.response.path)
-            .join(','),
-        });
+        this.model[type] = info.fileList
+          .map((ele) => ele.url || ele.response.path)
+          .join(',');
 
         this[type].forEach((ele) => {
           ele.url = ele.response.path;
@@ -139,12 +123,7 @@ export class DetailsComponent implements OnInit {
     }
   }
 
-  submitForm() {
-    for (const i of Object.keys(this.productForm.controls)) {
-      this.productForm.controls[i].markAsDirty();
-      this.productForm.controls[i].updateValueAndValidity();
-    }
-
+  submitForm({ valid }): void {
     if (this.mainImageUrl.length === 0) {
       this.msg.error('请添加产品主图');
       return;
@@ -153,58 +132,42 @@ export class DetailsComponent implements OnInit {
       this.msg.error('请添加产品副图');
       return;
     }
-    if (!this.productForm.value.content) {
+    if (!this.model.content) {
       this.msg.error('请添加产品内容');
       return;
     }
 
-    if (this.productForm.status === 'VALID') {
+    if (valid) {
       if (this.id) {
-        this.productssSerive
-          .putProduct(this.id, this.productForm.value)
-          .subscribe((res) => {
-            this.msg.success('修改成功');
-          });
+        this.dataService.putProduct(this.id, this.model).subscribe((res) => {
+          this.msg.success('修改成功');
+        });
       } else {
-        this.productssSerive
-          .addProduct(this.productForm.value)
-          .subscribe((res) => {
-            this.msg.success('添加成功');
-            this.router.navigate(['/products/list']);
-          });
+        this.dataService.addProduct(this.model).subscribe((res) => {
+          this.msg.success('添加成功');
+          this.router.navigate(['/products/list']);
+        });
       }
     }
   }
 
   ngOnInit(): void {
-    this.productForm = this.fb.group({
-      name: [null, [Validators.required]],
-      title: [null],
-      description: [null, [Validators.required]],
-      treeId: ['00000000-0000-0000-0000-000000000000', [Validators.required]],
-      mainImageUrl: [null, [Validators.required]],
-      otherImageUrl: [null, [Validators.required]],
-      keywords: [null],
-      content: [null],
-    });
-
     this.activatedRoute.queryParams.subscribe((queyParams) => {
       this.id = queyParams.id;
       if (this.id) {
         this.pageTitle = '编辑产品';
-        this.dataLoading = true;
-        this.productssSerive.getProduct(queyParams.id).subscribe((res) => {
-          this.dataLoading = false;
-          this.productForm.setValue({
-            name: res.name,
-            title: res.title,
-            description: res.description,
-            treeId: '00000000-0000-0000-0000-000000000000',
-            mainImageUrl: res.mainImageUrl,
-            otherImageUrl: res.otherImageUrl,
-            keywords: '22',
-            content: res.content,
-          });
+        this.pageLoading = true;
+        this.dataService.getProduct(queyParams.id).subscribe((res) => {
+          this.pageLoading = false;
+
+          this.model.name = res.name;
+          this.model.description = res.description;
+          this.model.title = res.title;
+          this.model.keywords = res.keywords;
+          this.model.content = res.content;
+          this.model.treeId = res.treeId;
+          this.model.mainImageUrl = res.mainImageUrl;
+          this.model.otherImageUrl = res.otherImageUrl;
 
           this.mainImageUrl = res.mainImageUrl.split(',').map((ele) => {
             const uploadFile: NzUploadFile = {
@@ -230,9 +193,12 @@ export class DetailsComponent implements OnInit {
             };
             return uploadFile;
           });
+
+          this._setCascaderData(this.model.treeId);
         });
       } else {
         this.pageTitle = '新增产品';
+        this._setCascaderData();
       }
     });
   }

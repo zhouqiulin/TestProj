@@ -1,3 +1,6 @@
+/*
+ * @LastEditTime: 2020-11-21 01:05:55
+ */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -19,15 +22,17 @@ interface GetProductListResDto {
   items: Product[];
 }
 
-
-
 @Injectable()
-export class ProductsService {
-
-  constructor(private http: HttpClient) { }
+export class ProductService {
+  constructor(private http: HttpClient) {}
 
   // 获取列表
-  getProductList(pageIndex: number, pageSize: number, name: string, sorting: string): Observable<GetProductListResDto> {
+  getProductList(
+    pageIndex: number,
+    pageSize: number,
+    name: string,
+    sorting: string
+  ): Observable<GetProductListResDto> {
     const url = '/api/app/Product';
     const params = new HttpParams()
       .append('Name', name)
@@ -60,6 +65,4 @@ export class ProductsService {
     const url = `/api/app/Product/${id}`;
     return this.http.delete<Product>(url);
   }
-
-
 }

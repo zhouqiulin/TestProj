@@ -1,5 +1,5 @@
 <!--
- * @LastEditTime: 2020-11-19 21:03:56
+ * @LastEditTime: 2020-11-21 00:59:38
 -->
 <div class="content-heading">
     <div>{{pageTitle}}
@@ -7,7 +7,7 @@
     </div>
 </div>
 
-<nz-spin class="card card-default" [nzSpinning]="dataLoading">
+<nz-spin class="card card-default" [nzSpinning]="pageLoading">
     <form  #myForm="ngForm" (ngSubmit)="submitForm(myForm)"  class="main" nz-form  nzLayout="horizontal">
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired  nzFor="title">标题</nz-form-label>

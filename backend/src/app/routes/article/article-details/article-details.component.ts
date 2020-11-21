@@ -25,7 +25,7 @@ export class ArticleDetailsComponent implements OnInit {
   showMore = false;
   uploadFile: NzUploadFile;
   editorConfig = this.settings.getEditorSetting();
-  dataLoading = false;
+  pageLoading = false;
   selectedTreeIds = [];
 
   model = {
@@ -96,7 +96,7 @@ export class ArticleDetailsComponent implements OnInit {
     });
   }
 
-  private setCascaderData(treeId?): void {
+  private _setCascaderData(treeId?): void {
     this.dataService.getTreeList('', 'Article').subscribe((res) => {
       this.treeOptons = this.commonService.getCascaderData(res.items);
       if (treeId) {
@@ -155,9 +155,9 @@ export class ArticleDetailsComponent implements OnInit {
       this.id = queyParams.id;
       if (this.id) {
         this.pageTitle = '编辑资讯';
-        this.dataLoading = true;
+        this.pageLoading = true;
         this.articlesSerive.getArticle(queyParams.id).subscribe((res) => {
-          this.dataLoading = false;
+          this.pageLoading = false;
           this.model.title = res.title;
           this.model.description = res.description;
           this.model.treeId = res.treeId;
@@ -166,11 +166,11 @@ export class ArticleDetailsComponent implements OnInit {
           this.model.from = res.from;
           this.model.content = res.content;
 
-          this.setCascaderData(this.model.treeId);
+          this._setCascaderData(this.model.treeId);
         });
       } else {
         this.pageTitle = '新增资讯';
-        this.setCascaderData();
+        this._setCascaderData();
       }
     });
   }

@@ -1,0 +1,108 @@
+<!--
+ * @LastEditTime: 2020-11-21 12:19:33
+-->
+<div class="content-heading">
+  <div>
+    {{ pageTitle }}
+    <small></small>
+  </div>
+</div>
+
+<nz-spin class="card card-default" [nzSpinning]="pageLoading">
+  <form class="main" #myForm="ngForm" (ngSubmit)="submitForm(myForm)" nzLayout="horizontal">
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">名称</nz-form-label>
+      <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="请输入名称">
+        <input nz-input [(ngModel)]="model.name" name="name" required />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="description">描述</nz-form-label>
+      <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="请输入描述">
+        <textarea nz-input placeholder="" [(ngModel)]="model.description" name="description" id="description" required
+          [nzAutosize]="{ minRows: 2, maxRows: 6 }"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="treeId">分类</nz-form-label>
+      <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="请选择分类">
+        <nz-cascader [nzOptions]="treeOptons" [(ngModel)]="selectedTreeIds" name="selectedTreeIds"
+          (ngModelChange)="treeChange($event)"></nz-cascader>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="mainImageUrl">产品主图</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请添加产品主图">
+        <nz-upload class="avatar-uploader" [nzAction]="uploadFileUrl" nzName="file" [(nzFileList)]="mainImageUrl"
+          nzListType="picture-card" [nzShowUploadList]="true" [nzShowButton]="mainImageUrl.length < 1"
+          [nzBeforeUpload]="beforeUploadMainImage" [nzPreview]="handlePreview" [nzRemove]="removeMainImageUrl"
+          (nzChange)="handleChange($event, 'mainImageUrl')">
+          <ng-container>
+            <i class="upload-icon" nz-icon [nzType]="'plus'"></i>
+            <div class="ant-upload-text">上传</div>
+          </ng-container>
+        </nz-upload>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>产品副图</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <nz-upload class="avatar-uploader" [nzAction]="uploadFileUrl" nzName="file" [(nzFileList)]="otherImageUrl"
+          nzListType="picture-card" [nzShowUploadList]="true" [nzShowButton]="otherImageUrl.length < 5"
+          [nzBeforeUpload]="beforeUploadOtherImage" [nzPreview]="handlePreview" [nzRemove]="removeOtherImageUrl"
+          (nzChange)="handleChange($event, 'otherImageUrl')">
+          <ng-container>
+            <i class="upload-icon" nz-icon [nzType]="'plus'"></i>
+            <div class="ant-upload-text">上传</div>
+          </ng-container>
+        </nz-upload>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">其他</nz-form-label>
+      <nz-form-control [nzSm]="8" [nzXs]="24">
+        <button nz-button type="button" nzType="link" (click)="showMore = !showMore">
+          {{ showMore ? "收起" : "展开"
+          }}<i nz-icon [nzType]="showMore ? 'up' : 'down'"></i>
+        </button>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item [hidden]="!showMore">
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="title">标题</nz-form-label>
+      <nz-form-control [nzSm]="8" [nzXs]="24">
+        <input nz-input [(ngModel)]="model.title" name="title" id="title" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item [hidden]="!showMore">
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="keywords">关键字</nz-form-label>
+      <nz-form-control [nzSm]="8" [nzXs]="24">
+        <input nz-input [(ngModel)]="model.keywords" name="keywords" id="keywords" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item [hidden]="!showMore">
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="from">来源</nz-form-label>
+      <nz-form-control [nzSm]="8" [nzXs]="24">
+        <input nz-input [(ngModel)]="model.from" name="from" id="from" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">内容</nz-form-label>
+      <nz-col [nzSm]="14" [nzXs]="24">
+        <editor id="editor" [init]="editorConfig" [(ngModel)]="model.content" name="content"></editor>
+      </nz-col>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control [nzSm]="{ span: 14, offset: 6 }" [nzXs]="24">
+        <button nz-button nzType="primary">提交</button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-spin>
+
+<nz-modal [nzVisible]="previewImageVisivle" [nzContent]="modalContent" [nzFooter]="null"
+  (nzOnCancel)="previewImageVisivle = false">
+  <ng-template #modalContent>
+    <img [src]="previewImageUrl" [ngStyle]="{ width: '100%' }" />
+  </ng-template>
+</nz-modal>

@@ -1,9 +1,12 @@
+/*
+ * @LastEditTime: 2020-11-21 01:07:05
+ */
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
-import { ProductsService } from '../../services/products.service';
+import { ProductService } from '../../services/product.service';
 import { ListComponent } from './list/list.component';
-import { DetailsComponent } from './details/details.component';
+import { DetailsComponent } from './details/product-details.component';
 
 const routes: Routes = [
   { path: 'list', component: ListComponent },
@@ -11,16 +14,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(routes),
-    SharedModule
-  ],
+  imports: [RouterModule.forChild(routes), SharedModule],
   declarations: [ListComponent, DetailsComponent],
-  exports: [
-    RouterModule
-  ],
-  providers: [
-    ProductsService
-  ]
+  exports: [RouterModule],
+  providers: [ProductService],
 })
-export class ProductsModule { }
+export class ProductModule {}
