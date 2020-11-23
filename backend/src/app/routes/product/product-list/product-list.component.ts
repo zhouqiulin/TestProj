@@ -1,29 +1,35 @@
+/*
+ * @LastEditTime: 2020-11-23 20:32:52
+ */
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ProductService } from '../../../services/product.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { DataService } from 'src/app/services/data.service';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
-  selector: 'app-articles-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
+  selector: 'app-product-list',
+  templateUrl: './product-list.component.html',
+  styleUrls: ['./product-list.component.scss'],
 })
 export class ListComponent implements OnInit {
   constructor(
-    private http: HttpClient,
     private route: Router,
     private productsService: ProductService,
     private modal: NzModalService,
-    private msg: NzMessageService
+    private msg: NzMessageService,
+    private dataService: DataService,
+    private commonService: CommonService
   ) {}
 
   treeId = '';
   name = '';
 
-  searchTreeId: string;
-  searchName: string;
+  searchTreeId = '';
+  searchName = '';
 
   totalCount = 0;
   list: any[];
@@ -34,52 +40,50 @@ export class ListComponent implements OnInit {
   pageSize = 10;
   expandKeys = ['100', '1001'];
   value: string;
-  nodes = [
-    {
-      title: 'parent 1',
-      key: '100',
-      children: [
-        {
-          title: 'parent 1-0',
-          key: '1001',
-          children: [
-            { title: 'leaf 1-0-0', key: '10010', isLeaf: true },
-            { title: 'leaf 1-0-1', key: '10011', isLeaf: true },
-          ],
-        },
-        {
-          title: 'parent 1-1',
-          key: '1002',
-          children: [{ title: 'leaf 1-1-0', key: '10020', isLeaf: true }],
-        },
-      ],
-    },
-  ];
+  nodes = [];
+  treeList = [];
 
-  getData() {
+  setTreeSelector(): void {
+    this.dataService.getTreeList('', 'Product').subscribe((res) => {
+      this.treeList = res.items;
+      this.nodes = this.commonService.getTreeSelectorData(res.items);
+    });
+  }
+
+  getData(): void {
     this.loading = true;
-    this.productsService
-      .getProductList(this.pageIndex, this.pageSize, this.name, '')
+    this.dataService
+      .getProductList(
+        this.searchName,
+        this.searchTreeId,
+        this.pageIndex,
+        this.pageSize
+      )
       .subscribe((res) => {
         this.list = res.items;
+        this.list.forEach((ele) => {
+          ele.nodePath = this.commonService.getNodePath(
+            ele.treeId,
+            this.treeList
+          );
+        });
         this.totalCount = res.totalCount;
         this.loading = false;
       });
   }
-  searchData() {
+  searchData(): void {
     this.pageIndex = 1;
-    this.searchTreeId = this.treeId;
     this.searchName = this.name;
     this.getData();
   }
-  edit(data) {
-    this.route.navigate(['/products/details'], {
+  edit(data): void {
+    this.route.navigate(['/product/details'], {
       queryParams: {
         id: data.id,
       },
     });
   }
-  delete(data) {
+  delete(data): void {
     this.modal.confirm({
       nzTitle: '确定删除?',
       nzContent: '<b style="color: red;">删除后无法再恢复！</b>',
@@ -95,11 +99,17 @@ export class ListComponent implements OnInit {
     this.productsService.deleteProduct(data.id);
   }
 
-  onChange($event: string): void {
-    console.log($event);
+  onChange(key: string): void {
+    this.pageIndex = 1;
+    this.searchTreeId = key || '';
+    this.searchData();
+  }
+  addProduct(): void {
+    this.route.navigate(['/product/details']);
   }
 
   ngOnInit(): void {
+    this.setTreeSelector();
     this.getData();
   }
 }

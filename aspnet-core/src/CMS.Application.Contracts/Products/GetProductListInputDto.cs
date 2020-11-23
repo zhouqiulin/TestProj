@@ -8,5 +8,6 @@ namespace CMS.Products
     public class GetProductListInputDto : PagedAndSortedResultRequestDto
     {
         public string Name { get; set; }
+        public Guid? TreeId { get; set; }
     }
 }

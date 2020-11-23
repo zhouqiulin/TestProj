@@ -1,5 +1,5 @@
 /*
- * @LastEditTime: 2020-11-21 00:39:13
+ * @LastEditTime: 2020-11-23 19:51:06
  */
 import { Routes } from '@angular/router';
 import { LayoutComponent } from '../layout/layout.component';
@@ -16,12 +16,12 @@ export const routes: Routes = [
           import('./home/home.module').then((m) => m.HomeModule),
       },
       {
-        path: 'articles',
+        path: 'article',
         loadChildren: () =>
           import('./article/article.module').then((m) => m.ArtilceModule),
       },
       {
-        path: 'products',
+        path: 'product',
         loadChildren: () =>
           import('./product/product.module').then((m) => m.ProductModule),
       },

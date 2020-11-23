@@ -7,17 +7,18 @@ using Volo.Abp.Domain.Repositories;
 using CMS.Products;
 using System.Threading.Tasks;
 using System.Linq;
+using CMS.Trees;
 
 namespace CMS
 {
     public class ProductAppService: CrudAppService<Product,ProductDto,Guid, GetProductListInputDto, CreateUpdateProductDto, CreateUpdateProductDto>, IProductAppService
     {
-        private readonly IRepository<Product, Guid> _repository;
         private readonly IProductRepository _productRepository;
-        public ProductAppService(IRepository<Product, Guid> repository,IProductRepository productRepository) : base(repository)
+        private readonly ITreeRepository _treeRepository;
+        public ProductAppService(IProductRepository productRepository, ITreeRepository treeRepository) : base(productRepository)
         {
-            _repository = repository;
             _productRepository = productRepository;
+            _treeRepository = treeRepository;
         }
 
 
@@ -40,7 +41,13 @@ namespace CMS
 
         protected override IQueryable<Product> CreateFilteredQuery(GetProductListInputDto input)
         {
-            return _repository.Where(o => o.Name.Contains(input.Name) || input.Name.IsNullOrWhiteSpace());
+            var nodes = _treeRepository.findChildNode(input.TreeId);
+
+            if (input.TreeId != null)
+            {
+                nodes.Add((Guid)input.TreeId);
+            }
+            return _productRepository.Where(o => o.Name.Contains(input.Name) || input.Name.IsNullOrWhiteSpace()).Where(o => nodes.Contains(o.TreeId));
 
         }
      

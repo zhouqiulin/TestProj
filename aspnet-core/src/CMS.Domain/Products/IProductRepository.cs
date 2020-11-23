@@ -6,7 +6,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace CMS.Products
 {
-    public interface IProductRepository : IBasicRepository<Product, Guid>
+    public interface IProductRepository : IRepository<Product, Guid>
     {
         public Task UpdateRange(IList<Product> entities);
 

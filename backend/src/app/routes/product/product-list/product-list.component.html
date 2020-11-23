@@ -1,0 +1,68 @@
+<!--
+ * @LastEditTime: 2020-11-23 20:32:24
+-->
+<div class="content-heading">
+  <div>产品列表
+    <small></small>
+  </div>
+</div>
+
+<div class="card card-default">
+  <div class="card-header clearfix">
+    <div class="options">
+      <button nz-button nzType="primary" (click)="addProduct()"><i nz-icon nzType="plus"></i>添加</button>
+    </div>
+    <div class="search">
+      <nz-tree-select style="width: 250px" [nzExpandedKeys]="expandKeys" [nzNodes]="nodes" nzShowSearch
+        (ngModelChange)="onChange($event)" nzPlaceHolder="选择类别" [(ngModel)]="treeId">
+      </nz-tree-select>
+      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+        <input type="text" nz-input placeholder="名称" [(ngModel)]="name" />
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button nzType="primary" nzSearch (click)="searchData()"><i nz-icon nzType="search"></i></button>
+      </ng-template>
+
+    </div>
+
+  </div>
+  <div class="card-body">
+
+    <nz-table #table nzSize="middle" nzFrontPagination="false" nzShowSizeChanger="true" [nzLoading]="loading"
+      [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" [(nzTotal)]="totalCount" [nzData]="list"
+      (nzPageIndexChange)="getData()" (nzPageSizeChange)="getData()">
+      <thead>
+        <tr>
+          <th width="20%">名称</th>
+          <th width="15%">分类</th>
+          <th width="35%">描述</th>
+          <th width="10%">创建时间</th>
+          <th width="20%">操作</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of table.data">
+          <td>
+            <span nz-typography>
+              <a href="" (click)="edit(row)">
+                {{row.name}}
+                <Link />
+              </a>
+            </span>
+          </td>
+          <td>
+            <span *ngIf="row.nodePath.parentNameList.length>0">{{row.nodePath.parentNameList.join('/')}}/</span>
+            <span>{{row.nodePath.selfName}}</span>
+          </td>
+          <td>{{ row.description }}</td>
+          <td>{{ row.creationTime|date:'yyyy-MM-dd HH:mm:ss' }}</td>
+          <td>
+            <button class="mr10" nz-button nzSize="small" nzType="primary" (click)="edit(row)"><i nz-icon
+                nzType="edit"></i>编辑</button>
+            <button nz-button nzSize="small" nzType="danger" (click)="delete(row)"><i nz-icon
+                nzType="delete"></i>删除</button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>

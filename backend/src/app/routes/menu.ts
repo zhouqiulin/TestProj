@@ -1,30 +1,31 @@
+/*
+ * @LastEditTime: 2020-11-23 19:52:04
+ */
 const articleManage = {
   text: '资讯管理',
-  link: '/articles',
   icon: 'icon-note',
   submenu: [
     {
       text: '资讯列表',
-      link: '/articles/list',
+      link: '/article/list',
     },
     {
       text: '新增资讯',
-      link: '/articles/details',
+      link: '/article/details',
     },
   ],
 };
 const productManage = {
   text: '产品管理',
-  link: '/article',
   icon: 'icon-handbag',
   submenu: [
     {
       text: '产品列表',
-      link: '/products/list',
+      link: '/product/list',
     },
     {
       text: '新增产品',
-      link: '/products/details',
+      link: '/product/details',
     },
   ],
 };

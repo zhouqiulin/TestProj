@@ -39,6 +39,7 @@ export class DetailsComponent implements OnInit {
     otherImageUrl: '',
     keywords: '',
     content: '',
+    from: '',
   };
 
   uploadFileUrl = '/api/app/file/uploadFile';

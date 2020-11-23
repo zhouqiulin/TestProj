@@ -15,7 +15,6 @@ import { CommonService } from 'src/app/services/common.service';
 })
 export class ArticleListComponent implements OnInit {
   constructor(
-    private http: HttpClient,
     private route: Router,
     private articlesSerive: ArticleService,
     private modal: NzModalService,
@@ -50,7 +49,6 @@ export class ArticleListComponent implements OnInit {
     this.dataService.getTreeList('', 'Article').subscribe((res) => {
       this.treeList = res.items;
       this.nodes = this.commonService.getTreeSelectorData(res.items);
-      this.getData();
     });
   }
 
@@ -110,11 +108,13 @@ export class ArticleListComponent implements OnInit {
   }
 
   onChange(key: string): void {
+    this.pageIndex = 1;
     this.searchTreeId = key || '';
     this.searchData();
   }
 
   ngOnInit(): void {
     this.setTreeSelector();
+    this.getData();
   }
 }
