@@ -1,5 +1,5 @@
 /*
- * @LastEditTime: 2020-11-21 12:03:55
+ * @LastEditTime: 2020-11-24 22:47:02
  */
 interface AuditedEntityDto {
   lastModificationTime: string;
@@ -38,6 +38,17 @@ export interface ProductDto extends AuditedEntityDto {
   description: string;
   content: string;
   sort: number;
-  valid: true;
+  valid: boolean;
+  id: string;
+}
+
+export interface PageDto extends AuditedEntityDto {
+  name: string;
+  treeId: string;
+  content: string;
+  title: string;
+  keywords: string;
+  sort: number;
+  valid: boolean;
   id: string;
 }

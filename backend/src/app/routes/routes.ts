@@ -1,5 +1,5 @@
 /*
- * @LastEditTime: 2020-11-23 19:51:06
+ * @LastEditTime: 2020-11-24 00:35:50
  */
 import { Routes } from '@angular/router';
 import { LayoutComponent } from '../layout/layout.component';
@@ -26,9 +26,9 @@ export const routes: Routes = [
           import('./product/product.module').then((m) => m.ProductModule),
       },
       {
-        path: 'pages',
+        path: 'page',
         loadChildren: () =>
-          import('./pages/pages.module').then((m) => m.PagesModule),
+          import('./page/page.module').then((m) => m.PageModule),
       },
       {
         path: 'system',

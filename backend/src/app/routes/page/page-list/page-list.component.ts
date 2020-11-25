@@ -1,22 +1,25 @@
+/*
+ * @LastEditTime: 2020-11-26 01:12:13
+ */
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { ArticleService } from '../../../services/article.service';
+import { PagesService } from '../../../services/pages.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { DataService } from 'src/app/services/data.service';
-import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 import { CommonService } from 'src/app/services/common.service';
+import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 
 @Component({
   selector: 'app-articles-list',
-  templateUrl: './article-list.component.html',
-  styleUrls: ['./article-list.component.scss'],
+  templateUrl: './page-list.component.html',
+  styleUrls: ['./page-list.component.scss'],
 })
-export class ArticleListComponent implements OnInit {
+export class ListComponent implements OnInit {
   constructor(
+    private http: HttpClient,
     private route: Router,
-    private articlesSerive: ArticleService,
     private modal: NzModalService,
     private msg: NzMessageService,
     private dataService: DataService,
@@ -24,13 +27,15 @@ export class ArticleListComponent implements OnInit {
   ) {}
 
   treeId = '';
-  title = '';
+  name = '';
 
   searchTreeId = '';
-  searchTitle = '';
+  searchName = '';
 
   totalCount = 0;
-  list = [];
+  list: any[];
+  treeList = [];
+  nodes: NzTreeNodeOptions[] = [];
 
   loading = true;
 
@@ -38,15 +43,12 @@ export class ArticleListComponent implements OnInit {
   pageSize = 10;
   expandKeys = ['100', '1001'];
   value: string;
-  nodes: NzTreeNodeOptions[] = [];
-  treeList = [];
 
-  addArticle(): void {
-    this.route.navigate(['/article/details']);
+  addPage(): void {
+    this.route.navigate(['/page/details']);
   }
-
   setTreeSelector(): void {
-    this.dataService.getTreeList('', 'Article').subscribe((res) => {
+    this.dataService.getTreeList('', 'Page').subscribe((res) => {
       this.treeList = res.items;
       this.nodes = this.commonService.getTreeSelectorData(res.items);
     });
@@ -54,40 +56,34 @@ export class ArticleListComponent implements OnInit {
 
   getData(): void {
     this.loading = true;
-
     this.dataService
-      .getArticleList(
-        this.searchTitle,
+      .getPageList(
+        this.searchName,
         this.searchTreeId,
         this.pageIndex,
         this.pageSize
       )
-      .subscribe(
-        (res) => {
-          this.list = res.items;
-          this.list.forEach((ele) => {
-            ele.nodePath = this.commonService.getNodePath(
-              ele.treeId,
-              this.treeList
-            );
-          });
-          this.totalCount = res.totalCount;
-          this.loading = false;
-        },
-        (err) => {
-          this.loading = false;
-        }
-      );
+      .subscribe((res) => {
+        this.list = res.items;
+        this.list.forEach((ele) => {
+          ele.nodePath = this.commonService.getNodePath(
+            ele.treeId,
+            this.treeList
+          );
+        });
+        this.totalCount = res.totalCount;
+        this.loading = false;
+      });
   }
   searchData(): void {
     this.pageIndex = 1;
-    this.searchTitle = this.title;
+    this.searchName = this.name;
     this.getData();
   }
-  edit(row): void {
-    this.route.navigate(['/articles/details'], {
+  edit(data): void {
+    this.route.navigate(['/page/details'], {
       queryParams: {
-        id: row.id,
+        id: data.id,
       },
     });
   }
@@ -97,14 +93,14 @@ export class ArticleListComponent implements OnInit {
       nzContent: '<b style="color: red;">删除后无法再恢复！</b>',
       nzOkType: 'danger',
       nzOnOk: () =>
-        this.articlesSerive.deleteArticle(data.id).subscribe((res) => {
+        this.dataService.deletePage(data.id).subscribe((res) => {
           this.msg.success('删除成功');
           this.getData();
         }),
       nzOnCancel: () => console.log('Cancel'),
     });
 
-    this.articlesSerive.deleteArticle(data.id);
+    this.dataService.deletePage(data.id);
   }
 
   onChange(key: string): void {

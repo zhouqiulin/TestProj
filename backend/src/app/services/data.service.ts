@@ -1,5 +1,5 @@
 /*
- * @LastEditTime: 2020-11-21 12:12:27
+ * @LastEditTime: 2020-11-25 22:56:45
  */
 
 import { Injectable } from '@angular/core';
@@ -139,6 +139,54 @@ export class DataService {
    */
   deleteProduct(id: string): Observable<number> {
     const url = `/api/app/Product/${id}`;
+    return this.http.delete<number>(url);
+  }
+
+  /******************************单页模块**********************************/
+  /**
+   * @description: 获取单页列表
+   * @param name 页面名称
+   * @param treeId 分类
+   * @param pageIndex 页码
+   * @param pageSize 页大小
+   */
+  getPageList(
+    name: string,
+    treeId: string,
+    pageIndex: number,
+    pageSize: number
+  ): Observable<IGetListDto<Model.PageDto>> {
+    const url = '/api/app/Page';
+    const params = {
+      Name: name,
+      TreeId: treeId,
+      SkipCount: ((pageIndex - 1) * pageSize).toString(),
+      MaxResultCount: pageSize.toString(),
+    };
+    return this.http.get<IGetListDto<Model.PageDto>>(url, { params });
+  }
+
+  // 添加Page
+  addPage(page): Observable<Model.PageDto> {
+    const url = '/api/app/page';
+    return this.http.post<Model.PageDto>(url, page);
+  }
+
+  // 修改Page
+  putPage(id: string, page): Observable<Model.PageDto> {
+    const url = `/api/app/page/${id}`;
+    return this.http.put<Model.PageDto>(url, page);
+  }
+
+  // 获取page
+  getPage(id: string): Observable<Model.PageDto> {
+    const url = `/api/app/page/${id}`;
+    return this.http.get<Model.PageDto>(url);
+  }
+
+  // 修改page
+  deletePage(id: string): Observable<number> {
+    const url = `/api/app/page/${id}`;
     return this.http.delete<number>(url);
   }
 }

@@ -5,6 +5,7 @@ using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using CMS.Pages;
 using CMS.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace CMS.Repository
 {
@@ -12,7 +13,12 @@ namespace CMS.Repository
     {
         public PageRepository(IDbContextProvider<CMSDbContext> dbContextProvider) : base(dbContextProvider)
         {
+        }
 
+        public Task UpdateRange(IList<Page> entities)
+        {
+            DbContext.UpdateRange(entities);
+            return Task.CompletedTask;
         }
     }
 }

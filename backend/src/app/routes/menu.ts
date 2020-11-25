@@ -1,5 +1,5 @@
 /*
- * @LastEditTime: 2020-11-23 19:52:04
+ * @LastEditTime: 2020-11-24 00:31:03
  */
 const articleManage = {
   text: '资讯管理',
@@ -32,16 +32,15 @@ const productManage = {
 
 const pageManage = {
   text: '单页管理',
-  link: '/pages',
   icon: 'icon-docs',
   submenu: [
     {
       text: '单页列表',
-      link: '/pages/list',
+      link: '/page/list',
     },
     {
       text: '新增单页',
-      link: '/pages/details',
+      link: '/page/details',
     },
   ],
 };

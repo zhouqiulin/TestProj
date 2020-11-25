@@ -25,6 +25,7 @@ namespace CMS.Products
         [Required]
         public string MainImageUrl { get; set; }
 
+        [Required]
         public string OtherImageUrl { get; set; }
 
         [StringLength(256)]

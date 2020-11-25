@@ -53,8 +53,6 @@ export class DetailsComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private settings: SettingsService,
-    private fb: FormBuilder,
-    private productSerive: ProductService,
     private msg: NzMessageService,
     private commonService: CommonService,
     private dataService: DataService
