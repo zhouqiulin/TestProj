@@ -1,5 +1,5 @@
 /*
- * @LastEditTime: 2020-11-25 22:56:45
+ * @LastEditTime: 2020-12-03 20:36:55
  */
 
 import { Injectable } from '@angular/core';
@@ -53,6 +53,43 @@ export class DataService {
       Category: category,
     };
     return this.get<IGetListDto<Model.TreeDto>>(url, { params });
+  }
+
+  /**
+   * @description: 添加分类
+   * @param product 分类
+   */
+  addTree(tree): Observable<Model.TreeDto> {
+    const url = '/api/app/Tree';
+    return this.http.post<Model.TreeDto>(url, tree);
+  }
+
+  /**
+   * @description: 修改分类
+   * @param id 分类Id
+   * @param tree 分类
+   */
+  putTree(id: string, tree): Observable<Model.TreeDto> {
+    const url = `/api/app/Tree/${id}`;
+    return this.http.put<Model.TreeDto>(url, tree);
+  }
+
+  /**
+   * @description: 获取类别详情
+   * @param id 类别Id
+   */
+  getTree(id: string): Observable<Model.TreeDto> {
+    const url = `/api/app/Tree/${id}`;
+    return this.http.get<Model.TreeDto>(url);
+  }
+
+  /**
+   * @description: 删除分类
+   * @param id 分类Id
+   */
+  deleteTree(id: string): Observable<number> {
+    const url = `/api/app/Tree/${id}`;
+    return this.http.delete<number>(url);
   }
 
   /******************************资讯模块**********************************/
@@ -166,27 +203,42 @@ export class DataService {
     return this.http.get<IGetListDto<Model.PageDto>>(url, { params });
   }
 
-  // 添加Page
+  /**
+   * @description: 添加单页
+   * @param product 单页
+   */
   addPage(page): Observable<Model.PageDto> {
     const url = '/api/app/page';
     return this.http.post<Model.PageDto>(url, page);
   }
 
-  // 修改Page
+  /**
+   * @description: 修改单页
+   * @param id 产品Id
+   * @param product 产品
+   */
   putPage(id: string, page): Observable<Model.PageDto> {
     const url = `/api/app/page/${id}`;
     return this.http.put<Model.PageDto>(url, page);
   }
 
-  // 获取page
+  /**
+   * @description: 获取单页详情
+   * @param id 单页Id
+   */
   getPage(id: string): Observable<Model.PageDto> {
     const url = `/api/app/page/${id}`;
     return this.http.get<Model.PageDto>(url);
   }
 
-  // 修改page
+  /**
+   * @description: 删除单页
+   * @param id 单页Id
+   */
   deletePage(id: string): Observable<number> {
     const url = `/api/app/page/${id}`;
     return this.http.delete<number>(url);
   }
 }
+
+/******************************菜单模块**********************************/

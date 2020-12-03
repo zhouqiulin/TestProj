@@ -118,11 +118,6 @@ export class CommonService {
 
   // 接口数据转换树表格数据格式
   toTreeNode(list): ITreeNode[] {
-    // return list.filter(item => item.parentId === parentId).map(item => ({
-    //   ...item,
-    //   key: item.id,
-    //   children: this.toTreeNode(list, item.id),
-    // }));
     const ids = list.map((ele) => ele.id);
 
     list.forEach((ele) => {
@@ -133,6 +128,21 @@ export class CommonService {
     list = list.filter((ele) => {
       return !ids.includes(ele.parentId);
     });
+
+    const calcNodeTotalAssetsCount = (list) => {
+      let t = 0;
+      for (const item of list) {
+        let total = item.assetsCount;
+        if (item.children.length > 0) {
+          total += calcNodeTotalAssetsCount(item.children);
+        }
+        item.totalAseetsCount = total;
+        t += total;
+      }
+      return t;
+    };
+
+    calcNodeTotalAssetsCount(list);
 
     return list;
   }

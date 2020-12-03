@@ -13,6 +13,8 @@ namespace CMS.Trees
 
         public string Name { get; set; }
 
+        public int AssetsCount { get; set; }
+
         public int Sort { get; set; }
     }
 }

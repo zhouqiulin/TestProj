@@ -1,5 +1,5 @@
 /*
- * @LastEditTime: 2020-11-24 22:47:02
+ * @LastEditTime: 2020-12-01 19:27:32
  */
 interface AuditedEntityDto {
   lastModificationTime: string;
@@ -23,6 +23,7 @@ export interface ArticleDto extends AuditedEntityDto {
 export interface TreeDto extends AuditedEntityDto {
   parentId: string;
   category: number;
+  AssetsCount: number;
   name: string;
   sort: number;
   id: string;

@@ -4,6 +4,7 @@ import { CommonService, ITreeNode } from 'src/app/services/common.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-tree',
@@ -21,11 +22,11 @@ export class TreeComponent implements OnInit {
   treeForm: FormGroup;
   nzOptions;
   ParentId;
-  getTreeList() {
-    this.systemService.getTreeList(this.category).subscribe((res) => {
+  getTreeList(): void {
+    this.dataService.getTreeList('', this.category).subscribe((res) => {
       this.listOfMapData = this.commonService.toTreeNode(res.items);
       this.listOfMapData.forEach((item) => {
-        this.mapOfExpandedData[item.key] = this.convertTreeToList(item);
+        this.mapOfExpandedData[item.key] = this._convertTreeToList(item);
       });
     });
   }
@@ -44,7 +45,7 @@ export class TreeComponent implements OnInit {
     }
   }
 
-  convertTreeToList(root: ITreeNode): ITreeNode[] {
+  private _convertTreeToList(root: ITreeNode): ITreeNode[] {
     const stack: ITreeNode[] = [];
     const array: ITreeNode[] = [];
     const hashMap = {};
@@ -52,7 +53,7 @@ export class TreeComponent implements OnInit {
 
     while (stack.length !== 0) {
       const node = stack.pop();
-      this.visitNode(node, hashMap, array);
+      this._visitNode(node, hashMap, array);
       if (node.children) {
         for (let i = node.children.length - 1; i >= 0; i--) {
           stack.push({
@@ -68,7 +69,7 @@ export class TreeComponent implements OnInit {
     return array;
   }
 
-  visitNode(
+  private _visitNode(
     node: ITreeNode,
     hashMap: { [key: string]: boolean },
     array: ITreeNode[]
@@ -79,7 +80,7 @@ export class TreeComponent implements OnInit {
     }
   }
 
-  addTree() {
+  addTree(): void {
     this.modalTitle = '添加类别';
     this.treeForm = this.fb.group({
       id: [null],
@@ -90,7 +91,7 @@ export class TreeComponent implements OnInit {
     this.treeModalVisible = true;
   }
 
-  addSubTree(data) {
+  addSubTree(data): void {
     this.modalTitle = '添加子类别';
     this.treeForm = this.fb.group({
       id: [null],
@@ -100,7 +101,7 @@ export class TreeComponent implements OnInit {
     });
     this.treeModalVisible = true;
   }
-  edit(data) {
+  edit(data): void {
     this.modalTitle = '编辑类别';
 
     const parentId = [];
@@ -121,10 +122,10 @@ export class TreeComponent implements OnInit {
     });
     this.treeModalVisible = true;
   }
-  onParentIdChanges(event) {
+  onParentIdChanges(event): void {
     this.treeForm.patchValue({ parentId: event[event.length - 1] });
   }
-  delete(data) {
+  delete(data): void {
     this.modal.confirm({
       nzTitle: '确定删除?',
       nzContent: '<b style="color: red;">删除后无法再恢复！</b>',
@@ -138,7 +139,7 @@ export class TreeComponent implements OnInit {
       nzOnCancel: () => console.log('Cancel'),
     });
   }
-  submitForm() {
+  submitForm(): void {
     for (const i of Object.keys(this.treeForm.controls)) {
       this.treeForm.controls[i].markAsDirty();
       this.treeForm.controls[i].updateValueAndValidity();
@@ -166,6 +167,7 @@ export class TreeComponent implements OnInit {
   constructor(
     private systemService: SystemService,
     private commonService: CommonService,
+    private dataService: DataService,
     private fb: FormBuilder,
     private msg: NzMessageService,
     private modal: NzModalService
